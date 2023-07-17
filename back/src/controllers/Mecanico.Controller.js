@@ -3,6 +3,26 @@ const pool = require('../DB/postgres');
 
 
 //Get all users
+exports.get_mecanico = async (req, res) => {
+
+    const id = req.params.id;
+    const query = 'SELECT * FROM mecanico WHERE idmecanico=$1';
+    
+    // Get all aeropuertos
+    const response = await pool.query(query, [id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({ 
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.get_all_mecanicos = async (req, res) => {
 
     const query = 'SELECT * FROM mecanico';
@@ -21,6 +41,26 @@ exports.get_all_mecanicos = async (req, res) => {
     })
     .end()
 }
+exports.update_mecanico = async(req, res) => {
+    const data = req.body;
+    const id = req.params.id;
+    const query = 'UPDATE mecanico SET nombre=$1,siglas=$2 WHERE idmecanico=$3;';
+
+    // Create
+    const response = await pool.query(query, [
+        data.nombre,
+        data.fechaIngreso,
+        id
+    ]);
+        
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
+    .end()}
 exports.create_mecanico= async (req, res) => {
 
     let {
@@ -49,25 +89,7 @@ exports.create_mecanico= async (req, res) => {
         console.log(err)
     }
 }
-exports.update_mecanico = async(req, res) => {
 
-        
-    try{
-        const updatedMecanico = await Mecanico.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
-        
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedMecanico
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
-}
 exports.delete_mecanico = async(req, res) => {
 
     try{
