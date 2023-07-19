@@ -39,6 +39,7 @@ exports.get_all_incidencias = async (req, res) => {
         
     // `;
     const query = "SELECT * FROM incidencia"
+    
     // Get all
     const response = await pool.query(query);
 
@@ -82,7 +83,8 @@ exports.create_incidencia = async (req, res) => {
         estatus,
         descripcion,
         comentario,
-        fecha
+        fecha,
+        refacciones
     } = req.body 
 
     // Resgistrar incidencia    
@@ -90,12 +92,20 @@ exports.create_incidencia = async (req, res) => {
         'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico) values($1,$2,$3,$4,$5,$6) RETURNING idincidencia;',
         [nombre, estatus, descripcion, comentario, fecha, idMecanico]
     )
-    console.log(response.rows)
-    
+    const idIncidenciaNew = response.rows[0].idincidencia;
+
+    let data = ''
+    for(let i = 0; i < refacciones.length; i++) {
+        data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idIncidenciaNew}),`
+    }
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`
+    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
+ 
+    var response2 = await pool.query(parseQueryRefacciones);
     res
     .status(201)
     .json({
-        status: "success",
+        status: "success", 
         msg: "Resgitro de usuario exitoso.",
         data: req.body
     })
@@ -141,4 +151,33 @@ exports.delete_incidencia = async(req, res) => {
         console.log(err)
     }
 
+}
+exports.get_resumen1 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha < $2`
+    console.log(date1)
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
 }
