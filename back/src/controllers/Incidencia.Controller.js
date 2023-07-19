@@ -5,40 +5,40 @@ const pool = require('../DB/postgres');
 //Get all Incidencias
 exports.get_all_incidencias = async (req, res) => {
       
-    const query = `
-    SELECT DISTINCT
-        i.idincidencia,
-        i.nombre,
-        i.estatus,
-        i.descripcion,
-        i.comentario,
-        i.ischeckwa,
-        i.fecha,
-        c.nombre nombrecliente ,
-        a.nombre nombreaeropuerto
+    // const query = `
+    // SELECT DISTINCT
+    //     i.idincidencia,
+    //     i.nombre,
+    //     i.estatus,
+    //     i.descripcion,
+    //     i.comentario,
+    //     i.ischeckwa,
+    //     i.fecha,
+    //     c.nombre nombrecliente ,
+    //     a.nombre nombreaeropuerto
         
         
-    FROM
-        incidencia i
-    INNER JOIN refacciones_incidencia ri
-        ON i.idincidencia = ri.idincidencia
-        INNER JOIN refaccion r
-        ON ri.idrefaccion = r.idrefaccion
-        INNER JOIN equipo_refacciones er
-        ON r.idrefaccion = er.idrefaccion
-        INNER JOIN equipo e
-        ON er.idtipoequipo = e.idtipoequipo
-        INNER JOIN cliente_aeropuerto ca
-        ON e.idclienteaeropuerto = ca.idclienteaeropuerto
-        INNER JOIN aeropuerto a
-        ON ca.idaeropuerto = a.idaeropuerto
-        INNER JOIN cliente c
-        ON ca.idcliente = c.idcliente
+    // FROM
+    //     incidencia i
+    // INNER JOIN refacciones_incidencia ri
+    //     ON i.idincidencia = ri.idincidencia
+    //     INNER JOIN refaccion r
+    //     ON ri.idrefaccion = r.idrefaccion
+    //     INNER JOIN equipo_refacciones er
+    //     ON r.idrefaccion = er.idrefaccion
+    //     INNER JOIN equipo e
+    //     ON er.idtipoequipo = e.idtipoequipo
+    //     INNER JOIN cliente_aeropuerto ca
+    //     ON e.idclienteaeropuerto = ca.idclienteaeropuerto
+    //     INNER JOIN aeropuerto a
+    //     ON ca.idaeropuerto = a.idaeropuerto
+    //     INNER JOIN cliente c
+    //     ON ca.idcliente = c.idcliente
         
     
         
-    `;
-    
+    // `;
+    const query = "SELECT * FROM incidencia"
     // Get all
     const response = await pool.query(query);
 
