@@ -151,20 +151,6 @@ exports.create_incidencia = async (req, res) => {
     const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
 
-    let queries = []
-    for(let i = 0; i < refacciones.length; i++) {
-        const queryUpdate = `UPDATE refaccion
-        SET costo = $1,
-            venta = $2,
-            proveedor = $3
-        WHERE idrefaccion = $4;`
-
-        queries.push(queryUpdate, [refacciones[i].costo, refacciones[i].precioVenta, refacciones[i].proveedor,refacciones[i].refaccion])
-    
-    }
-    
-    await Promise.all(pool.query(queries))    
-       
     var response2 = await pool.query(parseQueryRefacciones);
     res
     .status(201)
