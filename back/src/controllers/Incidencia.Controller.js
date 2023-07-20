@@ -78,8 +78,8 @@ exports.get_incidencia = async (req, res) => {
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
-        var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.estatus, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-        c.nombre clientenombre, a.nombre aeropuertonombre, e.equipo, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre
+        var response = await pool.query(`select i.idincidencia, i.nombre, i.estatus, i.estatus, i.comentario, i.fecha,  m.nombre,
+        c.nombre, a.nombre, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre
         from incidencia i
         inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion 
@@ -128,9 +128,23 @@ exports.create_incidencia = async (req, res) => {
     for(let i = 0; i < refacciones.length; i++) {
         data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idIncidenciaNew}),`
     }
-    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
- 
+
+    let queries = []
+    for(let i = 0; i < refacciones.length; i++) {
+        const queryUpdate = `UPDATE refaccion
+        SET costo = $1,
+            venta = $2,
+            proveedor = $3
+        WHERE idrefaccion = $4;`
+
+        queries.push(queryUpdate, [refacciones[i].costo, refacciones[i].precioventa, refacciones[i].proveedor,refacciones[i].refaccion])
+    
+    }
+    
+    await Promise.all(pool.query(queries))    
+       
     var response2 = await pool.query(parseQueryRefacciones);
     res
     .status(201)
@@ -197,6 +211,81 @@ exports.get_resumen1 = async (req, res) => {
 
     // Get all
     const response = await pool.query(query, [date1, date2]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_resumen3 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin,
+        aeropuerto
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion 
+    inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion
+    inner join equipo e on er.idequipo = e.idequipo
+    inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
+    inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
+    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND e.equipo = $3`
+        console.log(date1)
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, aeropuerto]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_resumen2 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin,
+        equipo
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion 
+    inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion
+    inner join equipo e on er.idequipo = e.idequipo
+    inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
+    inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
+    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND e.equipo = $3`
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, equipo]);
 
     console.log(response);
     
