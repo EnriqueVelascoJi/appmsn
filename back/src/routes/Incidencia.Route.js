@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1, ver_mas} = require('../controllers/Incidencia.Controller');
+const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1, get_resumen2, get_resumen3, ver_mas} = require('../controllers/Incidencia.Controller');
 const router = Router();
 
 
@@ -11,5 +11,7 @@ router.route('/').post(create_incidencia);
 router.route('/:id').put(update_incidencia);
 router.route('/:id').patch(delete_incidencia);
 router.route('/costos1').post(get_resumen1);
+router.route('/costos2').post(get_resumen2);
+router.route('/costos3').post(get_resumen3);
 
 module.exports = router;
