@@ -139,7 +139,7 @@ exports.create_incidencia = async (req, res) => {
             proveedor = $3
         WHERE idrefaccion = $4;`
 
-        queries.push(queryUpdate, [refacciones[i].costo, refacciones[i].precioventa, refacciones[i].proveedor,refacciones[i].refaccion])
+        queries.push(queryUpdate, [refacciones[i].costo, refacciones[i].precioVenta, refacciones[i].proveedor,refacciones[i].refaccion])
     
     }
     
