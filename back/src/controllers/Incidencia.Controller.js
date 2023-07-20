@@ -75,6 +75,26 @@ exports.get_incidencia = async (req, res) => {
 
       
 }
+exports.get_by_equipo = async (req, res) => {
+      
+    const id= req.params.id
+        var response = await pool.query(`select r.idrefaccion, r.costo, r.fechacosto, r.venta, r.fechaventa, r.proveedor, r.isdeleted, r.nombre from equipo_refacciones er
+        inner join refaccion r on er.idrefaccion = r.idrefaccion where er.idequipo =$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
