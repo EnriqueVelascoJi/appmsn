@@ -1,14 +1,15 @@
 const { Router } = require('express');
 
-const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1} = require('../controllers/Incidencia.Controller');
+const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1, ver_mas} = require('../controllers/Incidencia.Controller');
 const router = Router();
 
 
 router.route('/').get(get_all_incidencias);
 router.route('/:id').get(get_incidencia);
+router.route('/vermas/:id').get(ver_mas);
 router.route('/').post(create_incidencia);
 router.route('/:id').put(update_incidencia);
 router.route('/:id').patch(delete_incidencia);
-router.route('/costos1').post(get_resumen1)
+router.route('/costos1').post(get_resumen1);
 
 module.exports = router;
