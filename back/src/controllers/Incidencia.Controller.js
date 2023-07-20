@@ -78,8 +78,8 @@ exports.get_incidencia = async (req, res) => {
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
-        var response = await pool.query(`select i.idincidencia, i.nombre, i.estatus, i.estatus, i.comentario, i.fecha,  m.nombre,
-        c.nombre, a.nombre, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre
+        var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.estatus, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+        c.nombre, a.nombre, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre
         from incidencia i
         inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion 
