@@ -150,8 +150,9 @@ exports.create_incidencia = async (req, res) => {
     }
     const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
-
     var response2 = await pool.query(parseQueryRefacciones);
+
+    
     res
     .status(201)
     .json({
@@ -249,7 +250,7 @@ exports.get_resumen3 = async (req, res) => {
     inner join equipo e on er.idequipo = e.idequipo
     inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
     inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
-    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND e.equipo = $3`
+    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND a.nombre = $3`
         console.log(date1)
    
 
