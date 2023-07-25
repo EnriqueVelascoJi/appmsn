@@ -24,13 +24,31 @@ exports.get_all_equipos = async (req, res) => {
 }
 exports.create_equipo= async (req, res) => {
 
-    const data = req.body;
-    const query = 'INSERT INTO equipo(equipo,noeconomico,marca,modelo,noserie,tipocombustible,enuso,motivo) values($1,$2);';
+    let {
+        nombre,
+          marca,
+          modelo,
+          noSerie,
+          noEconomico,
+          tipoCombustible,
+          aeropuerto,
+          motivo,
+          enUso
+    } = req.body
+    const query = 'INSERT INTO equipo(equipo,noeconomico,marca,modelo,noserie,tipocombustible,enuso,motivo,idclienteaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9);'
 
     // Create
     const response = await pool.query(query, [
-        data.nombre,
-        data.siglas
+        nombre,
+        noEconomico,
+        marca,
+        modelo,
+        noSerie,
+        tipoCombustible,
+        enUso,
+        motivo,
+        aeropuerto
+
     ]);
         
     res
