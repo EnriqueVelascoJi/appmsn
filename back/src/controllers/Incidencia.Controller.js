@@ -56,6 +56,7 @@ exports.get_all_incidencias = async (req, res) => {
 
       
 }
+
 exports.get_incidencia = async (req, res) => {
       
     const id= req.params.id
@@ -293,6 +294,72 @@ exports.get_resumen2 = async (req, res) => {
 
     // Get all
     const response = await pool.query(query, [date1, date2, equipo]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_by_equipos = async (req, res) => {
+      
+    let {
+        equipo
+    } = req.body 
+
+    const query = `select i.idincidencia, i.nombre, i.estatus, i.descripcion, i.comentario, i.ischeckwa, i.fecha, i.isdeleted, i.idmecanico
+    from incidencia i
+    inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion 
+    inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion
+    inner join equipo e on er.idequipo = e.idequipo
+    inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
+    inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
+    inner join cliente c on ca.idcliente = c.idcliente where e.equipo = $1`
+   
+
+    // Get all
+    const response = await pool.query(query, [equipo]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_by_aeropuertos = async (req, res) => {
+      
+    let {
+        aeropuerto
+    } = req.body 
+
+    const query = `select i.idincidencia, i.nombre, i.estatus, i.descripcion, i.comentario, i.ischeckwa, i.fecha, i.isdeleted, i.idmecanico
+    from incidencia i
+    inner join refacciones_incidencia ri  on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion 
+    inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion
+    inner join equipo e on er.idequipo = e.idequipo
+    inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
+    inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
+    inner join cliente c on ca.idcliente = c.idcliente where a.nombre = $1`
+   
+
+    // Get all
+    const response = await pool.query(query, [aeropuerto]);
 
     console.log(response);
     
