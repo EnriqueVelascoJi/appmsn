@@ -32,11 +32,12 @@ exports.create_usuario = async (req, res) => {
         password,
         tipoUsuario,
         aprobador,
-        verificadorWA
+        verificadorWA,
+        cliente
     } = req.body 
 
     try{
-        const query = 'INSERT INTO usuario(idcliente, nombre, apellido, email, telefono, contrasenia, tipousuario, aprobador, verificadorwa) values($1,$2,$3,$4,$5,$6,$7,$8,$9);';
+        const query = 'INSERT INTO usuario(idcliente, nombre, apellido, email, telefono, contrasenia, tipousuario, aprobador, verificadorwa, idcliente) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);';
 
         // Create
         const response = await pool.query(query, [
@@ -48,7 +49,8 @@ exports.create_usuario = async (req, res) => {
             password,
             tipoUsuario,
             aprobador,
-            verificadorWA
+            verificadorWA,
+            cliente
         ]);
             
         res
