@@ -25,7 +25,7 @@ exports.get_mecanico = async (req, res) => {
 }
 exports.get_all_mecanicos = async (req, res) => {
 
-    const query = 'SELECT * FROM mecanico';
+    const query = 'SELECT * FROM mecanico where isdeleted=FALSE';
     
     // Get all
     const response = await pool.query(query);
@@ -92,20 +92,20 @@ exports.create_mecanico= async (req, res) => {
 
 exports.delete_mecanico = async(req, res) => {
 
-    try{
-        const updatedMecanico = await Mecanico.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const id = req.params.id;
+    const query = 'UPDATE mecanico SET isdeleted=TRUE WHERE idaeropuerto=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedMecanico
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
     
 }
