@@ -93,7 +93,7 @@ exports.create_mecanico= async (req, res) => {
 exports.delete_mecanico = async(req, res) => {
 
     const id = req.params.id;
-    const query = 'UPDATE mecanico SET isdeleted=TRUE WHERE idaeropuerto=$1;';
+    const query = 'UPDATE mecanico SET isdeleted=TRUE WHERE idmecanico=$1;';
 
     // Create
     const response = await pool.query(query, [
