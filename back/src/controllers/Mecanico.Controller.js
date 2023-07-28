@@ -25,7 +25,7 @@ exports.get_mecanico = async (req, res) => {
 }
 exports.get_all_mecanicos = async (req, res) => {
 
-    const query = 'SELECT * FROM mecanico where isdeleted=FALSE';
+    const query = 'SELECT * FROM mecanico where isdeleted=FALSE order by idmecanico';
     
     // Get all
     const response = await pool.query(query);
