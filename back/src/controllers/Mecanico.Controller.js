@@ -44,7 +44,7 @@ exports.get_all_mecanicos = async (req, res) => {
 exports.update_mecanico = async(req, res) => {
     const data = req.body;
     const id = req.params.id;
-    const query = 'UPDATE mecanico SET nombre=$1,siglas=$2 WHERE idmecanico=$3;';
+    const query = 'UPDATE mecanico SET nombre=$1, fechaingreso=$2 WHERE idmecanico=$3;';
 
     // Create
     const response = await pool.query(query, [
