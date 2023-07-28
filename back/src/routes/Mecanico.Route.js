@@ -7,7 +7,7 @@ const router = Router();
 router.route('/').get(get_all_mecanicos);
 router.route('/').post(create_mecanico);
 router.route('/:id').put(update_mecanico);
-router.route('/:id').patch(delete_mecanico);
+router.route('/:id').delete(delete_mecanico);
 router.route('/:id').get(get_mecanico) ;
 router.route('/:id').patch(update_mecanico);
 
