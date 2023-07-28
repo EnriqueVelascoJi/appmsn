@@ -6,7 +6,7 @@ const pool = require('../DB/postgres');
 //Get all users
 exports.get_all_aeropuertos = async (req, res) => {
 
-    const query = 'SELECT * FROM aeropuerto where isdeleted=FALSE';
+    const query = 'SELECT * FROM aeropuerto where isdeleted=FALSE order by idaeropuerto';
     
     // Get all aeropuertos
     const response = await pool.query(query);
