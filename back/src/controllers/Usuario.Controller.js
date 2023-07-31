@@ -5,7 +5,7 @@ const pool = require('../DB/postgres');
 //Get all users
 exports.get_all_usuarios = async (req, res) => {
 
-    const query = 'SELECT * FROM usuario';
+    const query = 'SELECT * FROM usuario where isdeleted=FALSE order by idusuario';
     
     // Get all
     const response = await pool.query(query);
@@ -84,21 +84,21 @@ exports.update_usuario = async(req, res) => {
 }
 exports.delete_usuario = async(req, res) => {
 
-    try{
-        const updatedCliente = await Cliente.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const id = req.params.id;
+    const query = 'UPDATE usuario SET isdeleted=TRUE WHERE idusuario=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedCliente
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
 
 }
 exports.login = async(req, res) => {
