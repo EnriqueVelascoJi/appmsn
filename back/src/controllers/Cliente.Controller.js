@@ -38,11 +38,13 @@ exports.create_cliente= async (req, res) => {
             descripcion
         ]);
     const idCliente = response.rows[0].idcliente;
+    console.log(idCliente)
 
     let data = ''
     for(let i = 0; i < aeropuertos.length; i++) {
         data += `(false,${idCliente},${aeropuertos[i].idaeropuerto}),`
     }
+    console.log(data)
     const queryCA = `INSERT INTO cliente_aeropuerto(isdeleted,idcliente,idaeropuerto) values${data}`;
     const parseQueryCA = queryCA.substring(0, queryCA.length - 1);
     var response2 = await pool.query(parseQueryCA);
