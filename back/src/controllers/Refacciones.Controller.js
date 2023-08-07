@@ -5,7 +5,7 @@ const pool = require('../DB/postgres');
 //Get all Incidencias
 exports.get_all_refacciones = async (req, res) => {
 
-    const query = 'SELECT * FROM refaccion';
+    const query = 'SELECT * FROM refaccion where isdeleted=FALSE order by idrefaccion';
     
     // Get all
     const response = await pool.query(query);
@@ -76,20 +76,20 @@ exports.update_refaccion = async(req, res) => {
 }
 exports.delete_refaccion = async(req, res) => {
 
-    try{
-        const updatedRefaccion = await Refaccion.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const id = req.params.id;
+    const query = 'UPDATE refaccion SET isdeleted=TRUE WHERE idrefaccion=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedRefaccion
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
 
 }
