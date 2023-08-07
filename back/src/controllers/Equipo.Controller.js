@@ -5,7 +5,7 @@ const pool = require('../DB/postgres');
 //Get all users
 exports.get_all_equipos = async (req, res) => {
 
-    const query = 'SELECT * FROM equipo';
+    const query = 'SELECT * FROM equipo where isdeleted=FALSE order by idequipo';
     
     // Get all equipos
     const response = await pool.query(query);
@@ -81,20 +81,20 @@ exports.update_equipo = async(req, res) => {
 }
 exports.delete_equipo = async(req, res) => {
 
-    try{
-        const updatedEquipo = await equipo.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const id = req.params.id;
+    const query = 'UPDATE equipo SET isdeleted=TRUE WHERE idcliente=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedEquipo
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
     
 }
