@@ -88,7 +88,7 @@ exports.update_usuario = async(req, res) => {
         
     const data = req.body;
     const id = req.params.id;
-    const query = 'UPDATE usuario SET nombre=$1, apellido=$2, email=$3, telefono=$4, contrasenia=$5, idcliente=$6 WHERE idusario=$7;';
+    const query = 'UPDATE usuario SET nombre=$1, apellido=$2, email=$3, telefono=$4, contrasenia=$5, idcliente=$6 WHERE idusuario=$7;';
 
     // Create
     const response = await pool.query(query, [
