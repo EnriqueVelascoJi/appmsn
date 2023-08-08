@@ -86,21 +86,29 @@ exports.create_usuario = async (req, res) => {
 exports.update_usuario = async(req, res) => {
 
         
-    try{
-        const updatedUser = await Usuario.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const data = req.body;
+    const id = req.params.id;
+    const query = 'UPDATE usuario SET nombre=$1, apellido=$2, email=$3, telefono=$4, contrasenia=$5, idcliente=$6 WHERE idusario=$7;';
+
+    // Create
+    const response = await pool.query(query, [
+        data.nombre,
+        data.apellido,
+        data.email,
+        data.telefono,
+        data.password,
+        data.cliente,
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedUser
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
+    .end()
 }
 exports.delete_usuario = async(req, res) => {
 
