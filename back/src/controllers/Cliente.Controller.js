@@ -30,15 +30,15 @@ exports.create_cliente= async (req, res) => {
     } = req.body 
 
     try{
-        const query = 'INSERT INTO cliente(nombre, descripcion) values($1,$2);';
+        const query = 'INSERT INTO cliente(nombre, descripcion) values($1,$2) RETURNING idcliente;';
 
         // Create
         const response = await pool.query(query, [
             nombre,
             descripcion
         ]);
+        
     const idCliente = response.rows[0].idcliente;
-    console.log(idCliente, response)
 
     let data = ''
     for(let i = 0; i < aeropuertos.length; i++) {
