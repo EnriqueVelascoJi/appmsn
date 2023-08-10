@@ -24,7 +24,7 @@ exports.get_all_clientes = async (req, res) => {
 exports.get_cliente = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'select c.idcliente, c.nombre, c.descripcion, c.isdeleted, ce.idclienteaeropuerto idclienteaeropuerto from cliente c inner join cliente_aeropuerto ce on c.idcliente = ce.idcliente WHERE c.idcliente=$1'
+    const query = 'select c.idcliente, c.nombre, c.descripcion, c.isdeleted, ce.idaeropuerto from cliente c inner join cliente_aeropuerto ce on c.idcliente = ce.idcliente WHERE c.idcliente=$1'
 
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
