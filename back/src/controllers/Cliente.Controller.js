@@ -47,6 +47,51 @@ exports.create_cliente= async (req, res) => {
         nombre,
         descripcion,
         aeropuertos
+    } = req.body
+    const id = req.params.id;
+
+
+    try{
+        const query = 'UPDATE usuario SET nombre=$1, descripcion=$2 WHERE idcliente=$3 RETURNING idcliente;';
+
+        // Create
+        const response = await pool.query(query, [
+            nombre,
+            descripcion,
+            id
+        ]);
+        
+    const idCliente = response.rows[0].idcliente;
+
+    let data = ''
+    for(let i = 0; i < aeropuertos.length; i++) {
+        data += `(false,${idCliente},${aeropuertos[i].idaeropuerto}),`
+    }
+    console.log(data)
+    const queryCA = `INSERT INTO cliente_aeropuerto(isdeleted,idcliente,idaeropuerto) values${data}`;
+    const parseQueryCA = queryCA.substring(0, queryCA.length - 1);
+    var response2 = await pool.query(parseQueryCA);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    
+    }catch(err){
+        console.log(err)
+    }
+}
+exports.update_cliente = async(req, res) => {
+
+        
+    let {
+        nombre,
+        descripcion,
+        aeropuertos
     } = req.body 
 
     try{
@@ -78,25 +123,6 @@ exports.create_cliente= async (req, res) => {
         })
         .end()
     
-    }catch(err){
-        console.log(err)
-    }
-}
-exports.update_cliente = async(req, res) => {
-
-        
-    try{
-        const updatedCliente = await Cliente.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
-        
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedCliente
-            }
-        })
     }catch(err){
         console.log(err)
     }
