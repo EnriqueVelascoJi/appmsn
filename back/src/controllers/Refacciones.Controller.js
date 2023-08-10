@@ -21,6 +21,26 @@ exports.get_all_refacciones = async (req, res) => {
     })
     .end()
 }
+exports.get_refaccion = async (req, res) => {
+
+    const id = req.params.id;
+    const query = 'select r.idrefaccion, r.proveedor, r.nombre, r.costo, r.venta, r.fechaventa, r.fechacosto from refaccion r inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion WHERE r.idrefaccion=$1'
+
+    // Get all aeropuertos
+    const response = await pool.query(query, [id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({ 
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.create_refaccion = async (req, res) => {
 
     let {
