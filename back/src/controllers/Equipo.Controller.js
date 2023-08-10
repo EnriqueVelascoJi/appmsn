@@ -32,6 +32,37 @@ exports.get_all_equipos = async (req, res) => {
     .end()
 
 }
+exports.get_equipo = async (req, res) => {
+
+    const id = req.params.id;
+
+    const query = `select e.idequipo,  e.equipo, e.noeconomico, e.marca, e.modelo, e.noserie, e.tipocombustible, e.enuso, e.motivo, e.isdeleted,
+    a.nombre nombreaeropuerto, c.nombre nombrecliente 
+    from equipo e 
+    inner join cliente_aeropuerto ce 
+    on e.idclienteaeropuerto = ce.idclienteaeropuerto
+    inner join cliente c
+    on c.idcliente = ce.idcliente
+    inner join aeropuerto a
+    on a.idaeropuerto = ce.idaeropuerto
+    where e.idequipo=$1
+    `;
+    
+    // Get all equipos
+    const response = await pool.query(query,[id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.create_equipo= async (req, res) => {
 
     let {
