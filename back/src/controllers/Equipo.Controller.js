@@ -32,6 +32,25 @@ exports.get_all_equipos = async (req, res) => {
     .end()
 
 }
+exports.get_all_tipos_equipos = async (req, res) => {
+
+    const query = `select * from tipo_equipo`;
+    
+    // Get all equipos
+    const response = await pool.query(query);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.get_equipo = async (req, res) => {
 
     const id = req.params.id;
