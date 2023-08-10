@@ -104,21 +104,43 @@ exports.create_equipo= async (req, res) => {
 exports.update_equipo = async(req, res) => {
 
         
-    try{
-        const updatedEquipo = await equipo.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    let {
+        nombre,
+          marca,
+          modelo,
+          noSerie,
+          noEconomico,
+          tipoCombustible,
+          aeropuerto,
+          motivo,
+          enUso
+    } = req.body
+    const id = req.params.id;
+
+    const query = 'UPDATE equipo SET equipo=$1,noeconomico=$2,marca=$3,modelo=$4,noserie=$5,tipocombustible=$6,enuso=$7,motivo=$8,idclienteaeropuerto=$9 WHERE idequipo=$10;'
+
+    // Create
+    const response = await pool.query(query, [
+        nombre,
+        noEconomico,
+        marca,
+        modelo,
+        noSerie,
+        tipoCombustible,
+        enUso,
+        motivo,
+        aeropuerto,
+        id
+
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedEquipo
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
 }
 exports.delete_equipo = async(req, res) => {
 
