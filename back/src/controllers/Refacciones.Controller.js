@@ -24,24 +24,39 @@ exports.get_all_refacciones = async (req, res) => {
 exports.create_refaccion = async (req, res) => {
 
     let {
+        nombre,
         costo,
         fechaCosto,
         venta,
         fechaVenta,
         proveedor,
+        equipos,
+
     } = req.body 
 
     try{
-        const query = 'INSERT INTO refaccion(costo, fechacosto, venta, fechaventa, proveedor) values($1,$2,$3,$4,$5);';
+        const query = 'INSERT INTO refaccion(nombre, costo, fechacosto, venta, fechaventa, proveedor) values($1,$2,$3,$4,$5,$6) RETURNING idrefaccion;';
 
         // Create
         const response = await pool.query(query, [
+            nombre,
             costo,
             fechaCosto,
             venta,
             fechaVenta,
             proveedor
         ]);
+
+        const idRefaccion = response.rows[0].idrefaccion;
+
+        let data = ''
+        for(let i = 0; i < equipos.length; i++) {
+            data += `(false,${idRefaccion},${equipos[i].idtipoequipo}),`
+        }
+        console.log(data)
+        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo, 568) values${data}`;
+        const parseQueryCA = queryCA.substring(0, queryCA.length - 1);
+        var response2 = await pool.query(parseQueryCA);
             
         res
         .status(201)
