@@ -187,21 +187,21 @@ exports.update_incidencia = async(req, res) => {
 }
 exports.delete_incidencia = async(req, res) => {
 
-    try{
-        const updatedIncidencia = await Incidencia.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+    const id = req.params.id;
+    const query = 'UPDATE incidencia SET isdeleted=TRUE WHERE idincidencia=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedIncidencia
-            }
-        })
-    }catch(err){
-        console.log(err)
-    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
 
 }
 exports.get_resumen1 = async (req, res) => {
