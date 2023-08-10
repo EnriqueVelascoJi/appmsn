@@ -5,6 +5,7 @@ const router = Router();
 
 
 router.route('/').get(get_all_equipos);
+router.route('/tipoequipos').get(get_all_equipos);
 router.route('/:id').get(get_equipo);
 router.route('/').post(create_equipo);
 router.route('/:id').patch(update_equipo);
