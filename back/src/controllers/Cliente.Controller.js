@@ -21,6 +21,26 @@ exports.get_all_clientes = async (req, res) => {
     })
     .end()
 }
+exports.get_cliente = async (req, res) => {
+
+    const id = req.params.id;
+    const query = 'SELECT * FROM cliente WHERE idcliente=$1';
+    
+    // Get all aeropuertos
+    const response = await pool.query(query, [id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({ 
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.create_cliente= async (req, res) => {
 
     let {
