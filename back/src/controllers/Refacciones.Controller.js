@@ -51,10 +51,10 @@ exports.create_refaccion = async (req, res) => {
 
         let data = ''
         for(let i = 0; i < equipos.length; i++) {
-            data += `(false,${idRefaccion},${equipos[i].idtipoequipo}),`
+            data += `(false,${idRefaccion},${equipos[i].idtipoequipo},568),`
         }
         console.log(data)
-        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo, 568) values${data}`;
+        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo,idequipo) values${data}`;
         const parseQueryCA = queryCA.substring(0, queryCA.length - 1);
         var response2 = await pool.query(parseQueryCA);
             
