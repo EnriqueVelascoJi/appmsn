@@ -37,7 +37,7 @@ exports.get_equipo = async (req, res) => {
     const id = req.params.id;
 
     const query = `select e.idequipo,  e.equipo, e.noeconomico, e.marca, e.modelo, e.noserie, e.tipocombustible, e.enuso, e.motivo, e.isdeleted,
-    a.nombre nombreaeropuerto, c.nombre nombrecliente, ce.idcliente, ce.idaeropuerto 
+    a.nombre nombreaeropuerto, c.nombre nombrecliente, ce.idcliente, ce.idaeropuerto, ce.idclienteaeropuerto
     from equipo e 
     inner join cliente_aeropuerto ce 
     on e.idclienteaeropuerto = ce.idclienteaeropuerto
