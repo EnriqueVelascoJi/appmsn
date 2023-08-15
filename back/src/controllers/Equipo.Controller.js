@@ -1,6 +1,6 @@
 const pool = require('../DB/postgres');   
 
-
+   
 
 //Get all users
 exports.get_all_equipos = async (req, res) => {
