@@ -82,6 +82,27 @@ exports.get_equipo = async (req, res) => {
     .end()
 
 }
+exports.get_equipo_by_clienteaeropuerto = async (req, res) => {
+
+    const id = req.params.id;
+
+    const query = `select * from equipo where idclienteaeropuerto=$1`;
+    
+    // Get all equipos
+    const response = await pool.query(query,[id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.create_equipo= async (req, res) => {
 
     let {
