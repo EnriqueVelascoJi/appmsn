@@ -41,7 +41,7 @@ exports.get_cliente = async (req, res) => {
     .end()
 
 }
-exports.create_cliente= async (req, res) => {
+exports.update_cliente= async (req, res) => {
 
     let {
         nombre,
@@ -85,7 +85,7 @@ exports.create_cliente= async (req, res) => {
         console.log(err)
     }
 }
-exports.update_cliente = async(req, res) => {
+exports.create_cliente = async(req, res) => {
 
         
     let {
