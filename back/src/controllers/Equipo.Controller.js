@@ -186,7 +186,7 @@ exports.update_equipo = async(req, res) => {
 exports.delete_equipo = async(req, res) => {
 
     const id = req.params.id;
-    const query = 'UPDATE equipo SET isdeleted=TRUE WHERE idcliente=$1;';
+    const query = 'UPDATE equipo SET isdeleted=TRUE WHERE idequipo=$1;';
 
     // Create
     const response = await pool.query(query, [
