@@ -1,6 +1,6 @@
 const pool = require('../DB/postgres');   
 
-   
+
 
 //Get all users
 exports.get_all_equipos = async (req, res) => {
@@ -14,6 +14,7 @@ exports.get_all_equipos = async (req, res) => {
     on c.idcliente = ce.idcliente
     inner join aeropuerto a
     on a.idaeropuerto = ce.idaeropuerto
+    where e.isdeleted=FALSE
     order by e.idequipo
     `;
     
