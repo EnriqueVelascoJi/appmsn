@@ -38,7 +38,7 @@ exports.get_all_incidencias = async (req, res) => {
     
         
     // `;
-    const query = "SELECT * FROM incidencia"
+    const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
     
     // Get all
     const response = await pool.query(query);
