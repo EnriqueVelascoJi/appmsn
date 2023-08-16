@@ -52,7 +52,7 @@ exports.update_cliente= async (req, res) => {
 
 
     try{
-        const query = 'UPDATE usuario SET nombre=$1, descripcion=$2 WHERE idcliente=$3 RETURNING idcliente;';
+        const query = 'UPDATE cliente SET nombre=$1, descripcion=$2 WHERE idcliente=$3;';
 
         // Create
         const response = await pool.query(query, [
@@ -61,7 +61,12 @@ exports.update_cliente= async (req, res) => {
             id
         ]);
         
-    const idCliente = response.rows[0].idcliente;
+        const queryDelete = 'DELETE FROM cliente where idcliente=$1'
+        // Create
+        const responseDelete = await pool.query(queryDelete, [
+            id
+        ]);
+    const idCliente = id;
 
     let data = ''
     for(let i = 0; i < aeropuertos.length; i++) {
