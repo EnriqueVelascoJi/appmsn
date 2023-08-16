@@ -61,7 +61,7 @@ exports.update_cliente= async (req, res) => {
             id
         ]);
         
-        const queryDelete = 'DELETE FROM cliente where idcliente=$1'
+        const queryDelete = 'DELETE FROM cliente_aeropuerto where idcliente=$1'
         // Create
         const responseDelete = await pool.query(queryDelete, [
             id
