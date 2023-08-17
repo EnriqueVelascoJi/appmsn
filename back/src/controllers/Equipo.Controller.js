@@ -5,7 +5,7 @@ const pool = require('../DB/postgres');
 //Get all users
 exports.get_all_equipos = async (req, res) => {
 
-    const query = `select e.idequipo,  e.equipo, e.noeconomico, e.marca, e.modelo, e.noserie, e.tipocombustible, e.enuso, e.motivo, e.isdeleted,
+    const query = `select e.idequipo, e.idtipoequipo, e.equipo, e.noeconomico, e.marca, e.modelo, e.noserie, e.tipocombustible, e.enuso, e.motivo, e.isdeleted,
     a.nombre nombreaeropuerto, c.nombre nombrecliente 
     from equipo e 
     inner join cliente_aeropuerto ce 
