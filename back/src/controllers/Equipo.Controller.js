@@ -177,11 +177,12 @@ exports.update_equipo = async(req, res) => {
           tipoCombustible,
           aeropuerto,
           motivo,
-          enUso
+          enUso,
+          idTipoEquipo
     } = req.body
     const id = req.params.id;
 
-    const query = 'UPDATE equipo SET equipo=$1,noeconomico=$2,marca=$3,modelo=$4,noserie=$5,tipocombustible=$6,enuso=$7,motivo=$8,idclienteaeropuerto=$9 WHERE idequipo=$10;'
+    const query = 'UPDATE equipo SET equipo=$1,noeconomico=$2,marca=$3,modelo=$4,noserie=$5,tipocombustible=$6,enuso=$7,motivo=$8,idclienteaeropuerto=$9, idtipoequipo=$10 WHERE idequipo=$11;'
 
     // Create
     const response = await pool.query(query, [
@@ -194,6 +195,7 @@ exports.update_equipo = async(req, res) => {
         enUso,
         motivo,
         aeropuerto,
+        idTipoEquipo,
         id
 
     ]);
