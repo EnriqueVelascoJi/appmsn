@@ -74,7 +74,7 @@ exports.create_refaccion = async (req, res) => {
             data += `(false,${idRefaccion},${equipos[i].idtipoequipo},568),`
         }
         console.log(data)
-        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo,idequipo) values${data}`;
+        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo) values${data}`;
         const parseQueryCA = queryCA.substring(0, queryCA.length - 1); 
         var response2 = await pool.query(parseQueryCA);
             
@@ -92,19 +92,57 @@ exports.create_refaccion = async (req, res) => {
 }
 exports.update_refaccion = async(req, res) => {
 
-        
+    let {
+        nombre,
+        costo,
+        fechaCosto,
+        venta,
+        fechaVenta,
+        proveedor,
+        equipos,
+
+    } = req.body 
+    const id = req.params.id;
+
+
     try{
-        const updatedRefaccion = await Refaccion.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
+        const query = 'UPDATE refaccion SET nombre=$1, costo=$2, fechacosto=$3, venta=$4, fechaventa=$5 proveedor=$6 WHERE idrefaccion=$7;';
+
+        // Create
+        const response = await pool.query(query, [
+            nombre,
+            costo,
+            fechaCosto,
+            venta,
+            fechaVenta,
+            proveedor,
+            id
+        ]);
+        const queryDelete = 'DELETE FROM equipo_refacciones where idrefaccion=$1'
+        // Create
+        const responseDelete = await pool.query(queryDelete, [
+            id
+        ]);
+
+        const idRefaccion = id;
+
+        let data = ''
+        for(let i = 0; i < equipos.length; i++) {
+            data += `(false,${idRefaccion},${equipos[i].idtipoequipo},568),`
+        }
+        console.log(data)
+        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo) values${data}`;
+        const parseQueryCA = queryCA.substring(0, queryCA.length - 1); 
+        var response2 = await pool.query(parseQueryCA);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
         })
-        
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedRefaccion
-            }
-        })
+        .end()
     }catch(err){
         console.log(err)
     }
