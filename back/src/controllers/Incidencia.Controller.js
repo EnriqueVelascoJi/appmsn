@@ -154,7 +154,13 @@ exports.create_incidencia = async (req, res) => {
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
 
-    
+    let dataToUpdtae = []
+    for(let i = 0; i < refacciones.length; i++) {
+        const query= `UPDATE refaccion set costo=${refacciones[i].costo}, venta=${refacciones[i].precioVenta} where idrefaccion=${refacciones[i].refaccion};`
+        dataToUpdtae.push(pool.query(query))
+    }
+
+    await Promise.all(dataToUpdtae);
     res
     .status(201)
     .json({
