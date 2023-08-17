@@ -106,7 +106,7 @@ exports.update_refaccion = async(req, res) => {
 
 
     try{
-        const query = 'UPDATE refaccion SET nombre=$1, costo=$2, fechacosto=$3, venta=$4, fechaventa=$5 proveedor=$6 WHERE idrefaccion=$7;';
+        const query = 'UPDATE refaccion SET nombre=$1, costo=$2, fechacosto=$3, venta=$4, fechaventa=$5, proveedor=$6 WHERE idrefaccion=$7;';
 
         // Create
         const response = await pool.query(query, [
