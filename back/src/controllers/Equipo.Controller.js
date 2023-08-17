@@ -104,6 +104,27 @@ exports.get_equipo_by_clienteaeropuerto = async (req, res) => {
     .end()
 
 }
+exports.get_equipo_by_idtipoequipo = async (req, res) => {
+
+    const id = req.params.id;
+
+    const query = `select * from equipo where idtipoequipo=$1`;
+    
+    // Get all equipos
+    const response = await pool.query(query,[id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+}
 exports.create_equipo= async (req, res) => {
 
     let {
@@ -115,9 +136,10 @@ exports.create_equipo= async (req, res) => {
           tipoCombustible,
           aeropuerto,
           motivo,
-          enUso
+          enUso,
+          idTipoEquipo
     } = req.body
-    const query = 'INSERT INTO equipo(equipo,noeconomico,marca,modelo,noserie,tipocombustible,enuso,motivo,idclienteaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9);'
+    const query = 'INSERT INTO equipo(equipo,noeconomico,marca,modelo,noserie,tipocombustible,enuso,motivo,idclienteaeropuerto,idtipoequipo) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);'
 
     // Create
     const response = await pool.query(query, [
@@ -129,7 +151,8 @@ exports.create_equipo= async (req, res) => {
         tipoCombustible,
         enUso,
         motivo,
-        aeropuerto
+        aeropuerto,
+        idTipoEquipo
 
     ]);
         
