@@ -75,7 +75,7 @@ exports.create_refaccion = async (req, res) => {
         }
         console.log(data)
         const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo,idequipo) values${data}`;
-        const parseQueryCA = queryCA.substring(0, queryCA.length - 1);
+        const parseQueryCA = queryCA.substring(0, queryCA.length - 1); 
         var response2 = await pool.query(parseQueryCA);
             
         res
