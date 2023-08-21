@@ -24,7 +24,7 @@ exports.get_all_refacciones = async (req, res) => {
 exports.get_refaccion = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'select r.idrefaccion, r.proveedor, r.nombre, r.costo, r.venta, r.fechaventa, r.fechacosto, er.idtipoequipo from refaccion r inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion WHERE r.idrefaccion=$1'
+    const query = ' select r.idrefaccion, r.proveedor, r.nombre, r.costo, r.venta, r.fechaventa, r.fechacosto, er.idtipoequipo from refaccion r inner join equipo_refacciones er on r.idrefaccion = er.idrefaccion WHERE r.idrefaccion=$1'
 
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
@@ -74,7 +74,7 @@ exports.create_refaccion = async (req, res) => {
             data += `(false,${idRefaccion},${equipos[i].idtipoequipo},568),`
         }
         console.log(data)
-        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo) values${data}`;
+        const queryCA = `INSERT INTO equipo_refacciones(isdeleted,idrefaccion,idtipoequipo,idequipo) values${data}`;
         const parseQueryCA = queryCA.substring(0, queryCA.length - 1); 
         var response2 = await pool.query(parseQueryCA);
             
