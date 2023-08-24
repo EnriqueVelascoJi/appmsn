@@ -78,8 +78,8 @@ exports.get_incidencia = async (req, res) => {
 }
 exports.get_by_equipo = async (req, res) => {
       
-    // const id= req.params.id
-    const id= 13
+    const id= req.params.id
+    // const id= 13
         var response = await pool.query(`select r.idrefaccion, r.costo, r.fechacosto, r.venta, r.fechaventa, r.proveedor, r.isdeleted, r.nombre from equipo_refacciones er
         inner join refaccion r on er.idrefaccion = r.idrefaccion where er.idtipoequipo =$1;`, [ id ]);
       
