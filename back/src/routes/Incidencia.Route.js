@@ -1,12 +1,13 @@
 const { Router } = require('express');
 
-const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1, get_resumen2, get_resumen3, ver_mas, get_by_equipo, get_by_equipos, get_by_aeropuertos} = require('../controllers/Incidencia.Controller');
+const { get_all_incidencias, get_incidencia,create_incidencia, update_incidencia, delete_incidencia, get_resumen1, get_resumen2, get_resumen3, ver_mas, get_by_equipo, get_by_equipos, get_by_aeropuertos, get_by_date} = require('../controllers/Incidencia.Controller');
 const router = Router();
 
 
 router.route('/').get(get_all_incidencias);
 router.route('/:id').get(get_incidencia);
 router.route('/getbyequipo/:id').get(get_by_equipo);
+router.route('/getbydate').post(get_by_date);
 router.route('/vermas/:id').get(ver_mas);
 router.route('/').post(create_incidencia);
 router.route('/:id').patch(update_incidencia);
