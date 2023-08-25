@@ -60,7 +60,7 @@ exports.get_all_incidencias = async (req, res) => {
 exports.get_incidencia = async (req, res) => {
       
     const id= req.params.id
-    const query = `select * from incidencia i 
+    const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     where i.idincidencia=$1`
