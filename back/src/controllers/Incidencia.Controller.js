@@ -85,7 +85,7 @@ exports.get_by_equipo = async (req, res) => {
     const id= req.params.id
     // const id= 13
         var response = await pool.query(`select r.idrefaccion, r.costo, r.fechacosto, r.venta, r.fechaventa, r.proveedor, r.isdeleted, r.nombre from equipo_refacciones er
-        inner join refaccion r on er.idrefaccion = r.idrefaccion where er.idtipoequipo =$1;`, [ id ]);
+        inner join refaccion r on er.idrefaccion = r.idrefaccion where er.idtipoequipo =$1 or idtipoequipo=13;`, [ id ]);
       
         if(response.rows.length == 0){
             console.log('error')
