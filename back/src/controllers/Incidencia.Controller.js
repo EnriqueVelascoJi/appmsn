@@ -167,13 +167,16 @@ exports.create_incidencia = async (req, res) => {
         comentario,
         fecha,
         refacciones,
-        tipoServicio
+        tipoServicio,
+        cliente,
+        aeropuerto,
+        equipo
     } = req.body 
 
     // Resgistrar incidencia    
     var response = await pool.query(
-        'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico,tiposervicio) values($1,$2,$3,$4,$5,$6,$7) RETURNING idincidencia;',
-        [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio]
+        'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico,tiposervicio,idcliente,idequipo,idaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING idincidencia;',
+        [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio,cliente,equipo,aeropuerto]
     )
     const idIncidenciaNew = response.rows[0].idincidencia;
 
