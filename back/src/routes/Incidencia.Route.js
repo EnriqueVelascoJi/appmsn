@@ -16,7 +16,7 @@ router.route('/costos1').post(get_resumen1);
 router.route('/costos2').post(get_resumen2);
 router.route('/costos3').post(get_resumen3);
 router.route('/costos4').post(get_resumen4);
-router.route('/equipos/').get(get_by_equipos);
+router.route('/equipos').post(get_by_equipos);
 router.route('/aeropuertos').post(get_by_aeropuertos);
 router.route('/clientes').post(get_by_clientes);
 
