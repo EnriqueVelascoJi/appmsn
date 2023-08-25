@@ -101,6 +101,31 @@ exports.get_by_equipo = async (req, res) => {
 
       
 }
+exports.get_by_date = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin
+    } = req.body
+    const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion where i.fecha between $1 and '$2`
+        var response = await pool.query(query, [ fechaInicio, fechaFin ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
