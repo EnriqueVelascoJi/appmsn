@@ -112,7 +112,7 @@ exports.get_by_date = async (req, res) => {
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
-    inner join refaccion r on ri.idrefaccion = r.idrefaccion where i.fecha >= $1 AND i.fecha < $2`
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion where i.fecha >= $1 AND i.fecha <= $2`
         var response = await pool.query(query, [ date1, date2]);
       
         if(response.rows.length == 0){
