@@ -304,7 +304,7 @@ exports.get_resumen1 = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha < $2`
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2`
     console.log(date1)
    
 
@@ -342,7 +342,7 @@ exports.get_resumen3 = async (req, res) => {
     inner join equipo e on er.idequipo = e.idequipo
     inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
     inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
-    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND a.nombre = $3`
+    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha <= $2 AND a.nombre = $3`
         console.log(date1)
    
 
@@ -380,7 +380,7 @@ exports.get_resumen2 = async (req, res) => {
     inner join equipo e on er.idequipo = e.idequipo
     inner join cliente_aeropuerto ca on e.idclienteaeropuerto = ca.idclienteaeropuerto
     inner join aeropuerto a on ca.idaeropuerto = a.idaeropuerto
-    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha < $2 AND e.equipo = $3`
+    inner join cliente c on ca.idcliente = c.idcliente where i.fecha >= $1 AND i.fecha <= $2 AND e.equipo = $3`
    
 
     // Get all
