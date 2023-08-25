@@ -60,7 +60,11 @@ exports.get_all_incidencias = async (req, res) => {
 exports.get_incidencia = async (req, res) => {
       
     const id= req.params.id
-        var response = await pool.query('SELECT * FROM incidencia WHERE idincidencia=$1;', [ id ]);
+    const query = `select * from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion
+    where i.idincidencia=$1`
+        var response = await pool.query(query, [ id ]);
       
         if(response.rows.length == 0){
             console.log('error')
