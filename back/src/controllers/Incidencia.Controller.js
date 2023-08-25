@@ -180,23 +180,73 @@ exports.create_incidencia = async (req, res) => {
 
 }
 exports.update_incidencia = async(req, res) => {
+   
+    let {
+        nombre,
+        estatus,
+        descripcion,
+        comentario,
+        fecha,
+        idMecanico,
+        tipoServicio,
+        refacciones
+    } = req.body
+    const id = req.params.id;
 
-        
+
     try{
-        const updatedIncidencia = await Incidencia.findByIdAndUpdate(req.params.id,req.body,{
-            new : true,
-            runValidators : true
-        })
+        const query = 'UPDATE incidencia SET nombre=$1, estatus=$2, descripcion=$3, comentario=$4, fecha=$5, idmecanico=$6, tiposervicio=$7 WHERE idincidencia=$8;';
+
+        // Create
+        const response = await pool.query(query, [
+            nombre,
+            estatus,
+            descripcion,
+            comentario,
+            fecha,
+            idMecanico,
+            tipoServicio,
+            id
+        ]);
         
-        res.status(200).json({
-            status : 'Success',
-            data : {
-              updatedIncidencia
-            }
+        const queryDelete = 'DELETE FROM refacciones_incidencia where idincidencia=$1'
+        // Create
+        const responseDelete = await pool.query(queryDelete, [
+            id
+        ]);
+    const idIncidencia = id;
+
+    let data = ''
+    for(let i = 0; i < refacciones.length; i++) {
+        data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idIncidencia}),`
+    }
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
+    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
+    var response2 = await pool.query(parseQueryRefacciones);
+
+    let dataToUpdtae = []
+    for(let i = 0; i < refacciones.length; i++) {
+        const query= `UPDATE refaccion set costo=${refacciones[i].costo}, fechacosto='${refacciones[i].fechaCosto}', fechaventa='${refacciones[i].fechaVenta}', proveedor='${refacciones[i].proveedor}', venta=${refacciones[i].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
+        console.log(query)
+        dataToUpdtae.push(pool.query(query))
+    }
+
+    await Promise.all(dataToUpdtae);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
         })
+        .end()
+    
     }catch(err){
         console.log(err)
     }
+        
+    
 }
 exports.delete_incidencia = async(req, res) => {
 
