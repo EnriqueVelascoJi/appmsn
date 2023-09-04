@@ -333,17 +333,19 @@ exports.get_resumen2 = async (req, res) => {
     let {
         fechaInicio,
         fechaFin,
-        equipo
+        equipo,
+        aeropuerto,
+        cliente
     } = req.body 
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
     
 
     // Get all
-    const response = await pool.query(query, [date1, date2, equipo]);
+    const response = await pool.query(query, [date1, date2, equipo, cliente, aeropuerto]);
 
     console.log(response);
     
@@ -363,17 +365,18 @@ exports.get_resumen3 = async (req, res) => {
     let {
         fechaInicio,
         fechaFin,
-        aeropuerto
+        aeropuerto,
+        cliente
     } = req.body 
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4`
     
 
     // Get all
-    const response = await pool.query(query, [date1, date2, aeropuerto]);
+    const response = await pool.query(query, [date1, date2, aeropuerto, cliente]);
 
     console.log(response);
     
@@ -424,16 +427,18 @@ exports.get_by_equipos = async (req, res) => {
     let {
         fechaInicio,
         fechaFin,
-        equipo
+        equipo,
+        aeropuerto,
+        cliente
     } = req.body 
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idequipo=$3`
+    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$`
    
 
     // Get all
-    const response = await pool.query(query, [date1, date2, equipo]);
+    const response = await pool.query(query, [date1, date2, equipo, cliente, aeropuerto]);
 
     console.log(response);
     
@@ -454,16 +459,17 @@ exports.get_by_aeropuertos = async (req, res) => {
     let {
         fechaInicio,
         fechaFin,
-        aeropuerto
+        aeropuerto,
+        cliente
     } = req.body 
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idaeropuerto=$3`
+    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idaeropuerto=$3 AND i.idcliente=$4`
    
 
     // Get all
-    const response = await pool.query(query, [date1, date2, aeropuerto]);
+    const response = await pool.query(query, [date1, date2, aeropuerto, cliente]);
 
     console.log(response);
     
