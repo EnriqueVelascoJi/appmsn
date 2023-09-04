@@ -434,7 +434,7 @@ exports.get_by_equipos = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
+    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idequipo=$3 AND idcliente=$4 AND idaeropuerto=$5`
    
 
     // Get all
@@ -465,7 +465,7 @@ exports.get_by_aeropuertos = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idaeropuerto=$3 AND i.idcliente=$4`
+    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idaeropuerto=$3 AND idcliente=$4`
    
 
     // Get all
