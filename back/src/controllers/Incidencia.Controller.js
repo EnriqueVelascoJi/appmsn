@@ -323,7 +323,7 @@ exports.get_resumen1 = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2`
     console.log(date1)
    
 
@@ -357,7 +357,7 @@ exports.get_resumen2 = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
     
 
     // Get all
@@ -388,7 +388,7 @@ exports.get_resumen3 = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4`
     
 
     // Get all
@@ -418,7 +418,7 @@ exports.get_resumen4 = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.fecha >= $1 AND i.fecha <= $2 AND i.idcliente=$3`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idcliente=$3`
     
 
     // Get all
