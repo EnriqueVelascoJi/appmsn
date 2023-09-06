@@ -38,8 +38,13 @@ exports.get_all_incidencias = async (req, res) => {
     
         
     // `;
-    const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
-    
+    //const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo where i.isdeleted=FALSE order by i.idincidencia `
     // Get all
     const response = await pool.query(query);
 
