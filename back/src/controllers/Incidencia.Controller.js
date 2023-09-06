@@ -119,7 +119,13 @@ exports.get_by_date = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2`
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 order by i.idincidencia;`
         var response = await pool.query(query, [ date1, date2]);
       
         if(response.rows.length == 0){
@@ -440,7 +446,13 @@ exports.get_by_equipos = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idequipo=$3 AND idcliente=$4 AND idaeropuerto=$5`
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5 order by i.idincidencia;`
    
 
     // Get all
@@ -471,7 +483,13 @@ exports.get_by_aeropuertos = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idaeropuerto=$3 AND idcliente=$4`
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4 order by i.idincidencia;`
    
 
     // Get all
@@ -501,7 +519,13 @@ exports.get_by_clientes = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select * from incidencia where fecha >= $1 AND fecha <= $2 AND idcliente=$3`
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo
+        where i.isdeleted=FALSE AND fecha >= $1 AND fecha <= $2 AND i.idcliente=$3 order by i.idincidencia;`
    
 
     // Get all
