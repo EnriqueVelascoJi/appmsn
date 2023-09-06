@@ -39,7 +39,7 @@ exports.get_all_incidencias = async (req, res) => {
         
     // `;
     //const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
-    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
     c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
