@@ -44,7 +44,11 @@ exports.get_all_incidencias = async (req, res) => {
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
-    inner join equipo e on e.idequipo = i.idequipo where i.isdeleted=FALSE order by i.idincidencia `
+    inner join equipo e on e.idequipo = i.idequipo 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion
+    inner join mecanico m on i.idmecanico = m.idmecanico
+        where i.isdeleted=FALSE order by i.idincidencia;`
     // Get all
     const response = await pool.query(query);
 
