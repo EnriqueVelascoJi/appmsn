@@ -150,7 +150,7 @@ exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
         var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre
+        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
         from incidencia i
         inner join cliente c on c.idcliente = i.idcliente
         inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
