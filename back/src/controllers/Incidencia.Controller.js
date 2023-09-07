@@ -566,7 +566,7 @@ exports.uploadImages = async(req, res) => {
     let data1 = ''
     if(images.length > 0) {
         for(let i = 0; i < images.length; i++) {
-            data1 += `(${images[i]},false,${id}),`
+            data1 += `('${images[i]}',false,${id}),`
         }
         const queryImages = `INSERT INTO imagen(url,isdeleted,idincidencia) values${data1}`;
         const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
@@ -592,7 +592,7 @@ exports.uploadFiles = async(req, res) => {
     let data2 = ''
     if(files.length > 0) {
         for(let i = 0; i < files.length; i++) {
-            data2 += `(${files[i]},false,${id}),`
+            data2 += `('${files[i]}'ß,false,${id}),`
         }
         const queryFiles = `INSERT INTO archivo(url,isdeleted,idincidencia) values${data2}`;
         const parseQueryFiles = queryFiles.substring(0, queryFiles.length - 1);
