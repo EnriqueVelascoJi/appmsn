@@ -146,11 +146,49 @@ exports.get_by_date = async (req, res) => {
 
       
 }
+exports.ver_imagenes = async (req, res) => {
+    const id= req.params.id
+        var response = await pool.query(`select i.idincidencia, im.url
+        from incidencia i
+        inner join imagen im on i.idincidencia = im.idincidencia
+        where i.idincidencia=$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+}
+exports.ver_files = async (req, res) => {
+    const id= req.params.id
+        var response = await pool.query(`select i.idincidencia, ar.url
+        from incidencia i
+        inner join archivo ar on i.idincidencia = ar.idincidencia
+        where i.idincidencia=$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+}
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
         var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor, ar.url urlarchivo, im.url urlimagen
+        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
         from incidencia i
         inner join cliente c on c.idcliente = i.idcliente
         inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -158,8 +196,7 @@ exports.ver_mas = async (req, res) => {
         inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         inner join mecanico m on i.idmecanico = m.idmecanico
-        inner join imagen im on i.idincidencia = im.idincidencia
-        inner join archivo ar on i.idincidencia = ar.idincidencia where i.idincidencia=$1;`, [ id ]);
+        where i.idincidencia=$1;`, [ id ]);
       
         if(response.rows.length == 0){
             console.log('error')
