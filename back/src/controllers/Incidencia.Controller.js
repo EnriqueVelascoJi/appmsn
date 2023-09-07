@@ -592,7 +592,7 @@ exports.uploadFiles = async(req, res) => {
     let data2 = ''
     if(files.length > 0) {
         for(let i = 0; i < files.length; i++) {
-            data2 += `('${files[i]}'ß,false,${id}),`
+            data2 += `('${files[i]}',false,${id}),`
         }
         const queryFiles = `INSERT INTO archivo(url,isdeleted,idincidencia) values${data2}`;
         const parseQueryFiles = queryFiles.substring(0, queryFiles.length - 1);
