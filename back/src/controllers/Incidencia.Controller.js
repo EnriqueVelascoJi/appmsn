@@ -150,14 +150,16 @@ exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
         var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
+        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor, ar.url urlarchivo, im.url urlimagen
         from incidencia i
         inner join cliente c on c.idcliente = i.idcliente
         inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
         inner join equipo e on e.idequipo = i.idequipo
         inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        inner join mecanico m on i.idmecanico = m.idmecanico where i.idincidencia=$1;`, [ id ]);
+        inner join mecanico m on i.idmecanico = m.idmecanico
+        inenr join imagen im on i.idincidencia = im.idincidencia
+        inner join archivo ar on i.idincidencia = ar.idincidencia where i.idincidencia=$1;`, [ id ]);
       
         if(response.rows.length == 0){
             console.log('error')
