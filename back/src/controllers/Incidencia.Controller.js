@@ -158,7 +158,7 @@ exports.ver_mas = async (req, res) => {
         inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         inner join mecanico m on i.idmecanico = m.idmecanico
-        inenr join imagen im on i.idincidencia = im.idincidencia
+        inner join imagen im on i.idincidencia = im.idincidencia
         inner join archivo ar on i.idincidencia = ar.idincidencia where i.idincidencia=$1;`, [ id ]);
       
         if(response.rows.length == 0){
