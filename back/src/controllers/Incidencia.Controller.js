@@ -211,6 +211,7 @@ exports.create_incidencia = async (req, res) => {
         console.log(query)
         dataToUpdtae.push(pool.query(query))
     }
+    
 
     await Promise.all(dataToUpdtae);
     res
@@ -218,7 +219,7 @@ exports.create_incidencia = async (req, res) => {
     .json({
         status: "success", 
         msg: "Resgitro de usuario exitoso.",
-        data: req.body
+        data: {...req.body, id: idIncidenciaNew}
     })
     .end()
 
@@ -553,4 +554,57 @@ exports.get_by_clientes = async (req, res) => {
     .end()
 
       
+}
+exports.uploadImages = async(req, res) => {
+
+    let {
+        id,
+        images,
+    } = req.body 
+
+
+    let data1 = ''
+    if(images.length > 0) {
+        for(let i = 0; i < images.length; i++) {
+            data1 += `(${images[i]},false,${id}),`
+        }
+        const queryImages = `INSERT INTO imagen(url,isdeleted,idincidencia) values${data1}`;
+        const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        var response3 = await pool.query(parseQueryImages);
+    }
+
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
+}
+exports.uploadFiles = async(req, res) => {
+    let {
+        id,
+        files,
+    } = req.body 
+
+
+    let data2 = ''
+    if(files.length > 0) {
+        for(let i = 0; i < files.length; i++) {
+            data2 += `(${files[i]},false,${id}),`
+        }
+        const queryFiles = `INSERT INTO archivo(url,isdeleted,idincidencia) values${data2}`;
+        const parseQueryFiles = queryFiles.substring(0, queryFiles.length - 1);
+        var response4 = await pool.query(parseQueryFiles);
+    }
+
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
 }
