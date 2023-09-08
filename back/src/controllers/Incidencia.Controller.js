@@ -647,3 +647,57 @@ exports.uploadFiles = async(req, res) => {
     })
     .end()
 }
+exports.borrarImages = async(req, res) => {
+
+    let {
+        id,
+        ids,
+    } = req.body 
+
+
+    let data1 = '('
+    if(ids.length > 0) {
+        for(let i = 0; i < ids.length; i++) {
+            data1 += `${ids[i]},`
+        }
+        const queryImages = `DELETE FROM imagen WHERE idimagen in ${data1}`;
+        let parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        parseQueryImages += ');'
+        var response3 = await pool.query(parseQueryImages);
+    }
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
+}
+exports.borrarFiles = async(req, res) => {
+    
+    let {
+        id,
+        ids,
+    } = req.body 
+
+
+    let data1 = '('
+    if(ids.length > 0) {
+        for(let i = 0; i < ids.length; i++) {
+            data1 += `${ids[i]},`
+        }
+        const queryImages = `DELETE FROM archivo WHERE idarchivo in ${data1}`;
+        let parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        parseQueryImages += ');'
+        var response3 = await pool.query(parseQueryImages);
+    }
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
+}
