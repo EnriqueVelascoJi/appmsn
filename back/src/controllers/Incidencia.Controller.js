@@ -148,7 +148,7 @@ exports.get_by_date = async (req, res) => {
 }
 exports.ver_imagenes = async (req, res) => {
     const id= req.params.id
-        var response = await pool.query(`select i.idincidencia, im.url
+        var response = await pool.query(`select i.idincidencia, im.url, im.idimagen
         from incidencia i
         inner join imagen im on i.idincidencia = im.idincidencia
         where i.idincidencia=$1;`, [ id ]);
@@ -167,7 +167,7 @@ exports.ver_imagenes = async (req, res) => {
 }
 exports.ver_files = async (req, res) => {
     const id= req.params.id
-        var response = await pool.query(`select i.idincidencia, ar.url
+        var response = await pool.query(`select i.idincidencia, ar.url, ar.idarchivo
         from incidencia i
         inner join archivo ar on i.idincidencia = ar.idincidencia
         where i.idincidencia=$1;`, [ id ]);
