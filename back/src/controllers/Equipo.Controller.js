@@ -87,7 +87,7 @@ exports.get_equipo_by_clienteaeropuerto = async (req, res) => {
 
     const id = req.params.id;
 
-    const query = `select * from equipo where idclienteaeropuerto=$1`;
+    const query = `select * from equipo where idclienteaeropuerto=$1 order by equipo`;
     
     // Get all equipos
     const response = await pool.query(query,[id]);
