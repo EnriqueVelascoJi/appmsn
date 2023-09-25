@@ -14,7 +14,7 @@ require('dotenv').config()
 //Init server
 const app = express();
 
-const PORT = process.env.PORT || 3005; 
+const PORT = process.env.PORT || 3020; 
  
 //Middlewares 
 app.use(cors()) 
@@ -32,7 +32,7 @@ app.use('/imagen', require('./routes/Imagen.Route'))
 app.use('/refacciones-incidencias', require('./routes/RefaccionesIncidencias.Route'))
 app.use('/refacciones', require('./routes/Refacciones.Route'))
 
-
+ 
 
 
 
@@ -41,4 +41,6 @@ app.use('/refacciones', require('./routes/Refacciones.Route'))
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`)
 })
+
+require('./controllers/WA.Controller')
 
