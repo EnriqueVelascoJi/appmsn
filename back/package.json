@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node src/index.js ",
-    "start": "node src/index.js "
+    "dev": "node src/index.js "
   },
   "keywords": [
     "msn",
@@ -23,7 +22,9 @@
     "express-pg-session": "^1.1.0",
     "express-session": "^1.17.3",
     "mongoose": "^7.1.1",
-    "pg": "^8.11.0"
+    "pg": "^8.11.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
