@@ -1,5 +1,10 @@
 const Incidencia= require('../models/Incidencia.Models')
 const pool = require('../DB/postgres');
+const { findWAUsers } = require('../waUtils')
+
+const { sendWANotification } = require('./WA.Controller')
+
+
 
 
 //Get all Incidencias
@@ -229,12 +234,33 @@ exports.create_incidencia = async (req, res) => {
         equipo
     } = req.body 
 
+    const waUsers = await findWAUsers();
+         console.log('waUsers', waUsers);
+      if (waUsers && waUsers.length) {
+       await sendWANotification(waUsers)
+      }
+
     // Resgistrar incidencia    
     var response = await pool.query(
         'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico,tiposervicio,idcliente,idequipo,idaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING idincidencia;',
         [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio,cliente,equipo,aeropuerto]
     )
     const idIncidenciaNew = response.rows[0].idincidencia;
+
+    // if(idIncidenciaNew) {
+    //     const waUsers = await findWAUsers();
+    //      console.log('waUsers', waUsers);
+    //   if (waUsers && waUsers.length) {
+    //     await Promise.all(
+    //       waUsers.map(async (user) =>
+    //         sendWANotification(
+    //           `521${user.telefono}@c.us`,
+    //           response.rows[0],
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // }
 
     let data = ''
     for(let i = 0; i < refacciones.length; i++) {
