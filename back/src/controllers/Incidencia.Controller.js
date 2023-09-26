@@ -1,4 +1,3 @@
-const Incidencia= require('../models/Incidencia.Models')
 const pool = require('../DB/postgres');
 const { findWAUsers, findIncidenciaData } = require('../waUtils')
 
