@@ -1,7 +1,7 @@
 const pool = require('../DB/postgres');
 const { findWAUsers, findIncidenciaData } = require('../waUtils')
 
-const { sendWANotification } = require('./WA.Controller')
+const { sendWANotification, sendImages } = require('./WA.Controller')
 
 
 
@@ -640,6 +640,10 @@ exports.uploadImages = async(req, res) => {
         const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
         var response3 = await pool.query(parseQueryImages);
     }
+
+    const waUsers = await findWAUsers();
+
+    const incidenciaData1 = await sendImages(waUsers, id)
 
     res
     .status(201)
