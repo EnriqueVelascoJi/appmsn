@@ -1,4 +1,3 @@
-const Mecanico = require('../models/Mecanico.Models')
 const pool = require('../DB/postgres');   
 
 
