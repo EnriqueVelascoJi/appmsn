@@ -1,5 +1,7 @@
 const qrcode = require('qrcode-terminal');
-const pool = require('../DB/postgres');   
+const pool = require('../DB/postgres');  
+const { aprovarInciencia, rechazarIncidencia } = require('../waUtils')
+
 
 //Import DB Connection
 //require('./DB')
@@ -8,11 +10,7 @@ const pool = require('../DB/postgres');
 
 const { Client } = require('whatsapp-web.js');
 
-const client = new Client({
-	puppeteer: {
-		args: ['--no-sandbox'],
-	}
-})
+const client = new Client()
 
 //Running server
 
@@ -85,7 +83,11 @@ client.on('message',async (message) => {
 	}
 
     if (hasQuotedMsg) {
-        const isLoggedIn = await login(message.from, message.body);
+
+      const typeMessage = message.body
+      if(typeMessage.includes('@')){
+
+        const isLoggedIn = await login(message.from, typeMessage);
         if (isLoggedIn) {
             return client.sendMessage(
               message.from,
@@ -96,6 +98,27 @@ client.on('message',async (message) => {
             message.from,
             'Ocurrió un error al intentar autenticar tu usuario. Responde a este mensaje escribiendo tu correo seguido de tu contraseña. Ejemplo: hola@mail.com msnPassword',
           );
+      } else {
+
+        const messIncidencia = typeMessage.trim().split('-');
+        const action = messIncidencia[0]
+        const id = messIncidencia[1]
+        if( action == '1') {
+         const response =  await aprovarInciencia(id)
+         return client.sendMessage(
+          message.from,
+          'Se ha aprobado correctamente la incidencia.'
+        );
+        }
+        if(action == '2') {
+          const response = await rechazarIncidencia(id)
+          return client.sendMessage(
+            message.from,
+            'Se ha rechazado correctamente la incidencia.'
+            );
+        }
+
+      }
     }
 
     if (user) {
@@ -112,15 +135,31 @@ client.on('message',async (message) => {
 
 
 exports.sendWANotification = async (users, incidencia) => {
-    
-    
+  
+
+  const normalData = incidencia
+  let costo = 0
+  let venta = 0
+    for(let i = 0; i < normalData.length; i++) {
+      costo += normalData[i].nopiezas * normalData[i].costo
+      venta += normalData[i].nopiezas * normalData[i].precioventa
+    }
 
   try {
     
     const newMSG = `Nueva incidencia generada,
-       Selecciona una opción para aprobar o rechazar
-       1. Aprobar
-       2. Rechazar
+      *ID: *${incidencia[0].idincidencia}
+      *Nombre: *${incidencia[0].incidencianombre}
+      *Aeropuerto* ${incidencia[0].aeropuertonombre}
+      *Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}
+      *Tipo de incidencia*: ${incidencia[0].tiposervicio}
+      *Fecha: *${incidencia[0].fecha}
+      *Descripción: *${incidencia[0].descripcion}
+      *Total venta: *${venta}
+    
+       Responde a este mensaje colocando de un número 1(Aprobar), 2(Rechazar) seguido de un guión medio y el ID de la incidencia\n*Ejemplo:\n*, 
+       1-45 (Aprobar)
+       2-45 (Rechazar)
        `;
 
 
@@ -147,3 +186,5 @@ exports.sendWANotification = async (users, incidencia) => {
   
 
 };
+
+
