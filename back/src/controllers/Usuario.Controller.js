@@ -1,4 +1,3 @@
-const Usuario= require('../models/Usuario.Model')
 const pool = require('../DB/postgres');   
 
 
