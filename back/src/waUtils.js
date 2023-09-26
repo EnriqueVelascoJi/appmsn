@@ -73,9 +73,44 @@ const findWAUsers = async () => {
     
     
 };
+const findIncidenciaData = async (id) => {
 
 
+    var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join equipo e on e.idequipo = i.idequipo
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion
+    inner join mecanico m on i.idmecanico = m.idmecanico
+    where i.idincidencia=$1;`, [ id ]);
+  
+    if(response.rows.length == 0){
+        console.log('error')
+    }
+  
+    return response.rows
+           
+}
+
+const aprovarInciencia = async (id) => {
+
+    var response = await pool.query(`UPDATE incidencia SET estatus=Aprobada where i.idincidencia=$1;`, [ id ]);
+
+
+}
+
+const rechazarIncidencia = async (id) => {
+
+    var response = await pool.query(`UPDATE incidencia SET estatus=Rechazada where i.idincidencia=$1;`, [ id ]);
+
+}
 
 module.exports = {
-    findWAUsers
+    findWAUsers,
+    findIncidenciaData,
+    aprovarInciencia,
+    rechazarIncidencia
 }
