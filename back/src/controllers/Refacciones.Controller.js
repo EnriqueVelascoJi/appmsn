@@ -1,4 +1,3 @@
-const Refaccion= require('../models/Refacciones.Models')
 const pool = require('../DB/postgres');   
 
 
