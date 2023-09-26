@@ -100,14 +100,14 @@ const findIncidenciaData = async (id) => {
 
 const aprovarInciencia = async (id) => {
 
-    var response = await pool.query(`UPDATE incidencia SET estatus=Aprobada where idincidencia=$1;`, [ id ]);
+    var response = await pool.query(`UPDATE incidencia SET estatus='Aprobada' where idincidencia=${id};`);
 
 
 }
 
 const rechazarIncidencia = async (id) => {
 
-    var response = await pool.query(`UPDATE incidencia SET estatus=Rechazada where idincidencia=$1;`, [ id ]);
+    var response = await pool.query(`UPDATE incidencia SET estatus='Rechazada' where idincidencia=${id};`);
 
 }
 
