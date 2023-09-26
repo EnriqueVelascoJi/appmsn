@@ -1,6 +1,6 @@
 const Incidencia= require('../models/Incidencia.Models')
 const pool = require('../DB/postgres');
-const { findWAUsers } = require('../waUtils')
+const { findWAUsers, findIncidenciaData } = require('../waUtils')
 
 const { sendWANotification } = require('./WA.Controller')
 
@@ -235,10 +235,7 @@ exports.create_incidencia = async (req, res) => {
     } = req.body 
 
     const waUsers = await findWAUsers();
-         console.log('waUsers', waUsers);
-      if (waUsers && waUsers.length) {
-       await sendWANotification(waUsers)
-      }
+      
 
     // Resgistrar incidencia    
     var response = await pool.query(
@@ -246,6 +243,12 @@ exports.create_incidencia = async (req, res) => {
         [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio,cliente,equipo,aeropuerto]
     )
     const idIncidenciaNew = response.rows[0].idincidencia;
+
+    console.log('waUsers', waUsers);
+    const incidenciaData = await findIncidenciaData(idIncidenciaNew)
+    if (waUsers && waUsers.length) {
+     await sendWANotification(waUsers, incidenciaData)
+    }
 
     // if(idIncidenciaNew) {
     //     const waUsers = await findWAUsers();
