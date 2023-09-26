@@ -85,7 +85,7 @@ const findIncidenciaData = async (id) => {
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     inner join mecanico m on i.idmecanico = m.idmecanico
-    where i.idincidencia=$1;`, [ id ]);
+    where i.idincidencia=$1;`, [ parseInt(id) ]);
   
     if(response.rows.length == 0){
         console.log('error')
@@ -97,14 +97,14 @@ const findIncidenciaData = async (id) => {
 
 const aprovarInciencia = async (id) => {
 
-    var response = await pool.query(`UPDATE incidencia SET estatus=Aprobada where i.idincidencia=$1;`, [ id ]);
+    var response = await pool.query(`UPDATE incidencia SET estatus=Aprobada where idincidencia=$1;`, [ id ]);
 
 
 }
 
 const rechazarIncidencia = async (id) => {
 
-    var response = await pool.query(`UPDATE incidencia SET estatus=Rechazada where i.idincidencia=$1;`, [ id ]);
+    var response = await pool.query(`UPDATE incidencia SET estatus=Rechazada where idincidencia=$1;`, [ id ]);
 
 }
 
