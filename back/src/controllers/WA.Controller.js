@@ -177,6 +177,8 @@ exports.sendWANotification = async (users, incidencia) => {
   inner join imagen im on i.idincidencia = im.idincidencia
   where i.idincidencia=${incidencia[0].idincidencia};`);
 
+  console.log({responseIm: responseIm.rows})
+
   if (responseIm.rows.length) {
     await Promise.all(
       responseIm.rows.map(async (image) => {
@@ -198,4 +200,52 @@ exports.sendWANotification = async (users, incidencia) => {
 
 };
 
+exports.sendImages = async (users, id) => {
+  
+  
+
+  try {
+    
+    let chats = []
+    const contacts = await client.getContacts()
+
+    for(let i = 0; i < users.length; i++) {
+      const contact = contacts.find(({ number }) => number === `521${users[i].telefono}`)
+      const { id: { _serialized: chatId } } = contact
+
+      chats.push(chatId)
+
+    }
+    
+
+  const responseIm = await pool.query(`select i.idincidencia, im.url, im.idimagen
+  from incidencia i
+  inner join imagen im on i.idincidencia = im.idincidencia
+  where i.idincidencia=${id};`);
+
+  console.log({responseIm: responseIm.rows})
+
+  if (responseIm.rows.length) {
+    await Promise.all(
+      responseIm.rows.map(async (image) => {
+        const messageMedia = await MessageMedia.fromUrll(image.url);
+        await Promise.all(
+          chats.map(async (chat) => {
+            await client.sendMessage(chat,messageMedia);
+          })
+        )
+      })
+    );
+  }
+
+ 
+  //  await Promise.all(users.map(user => client.sendMessage(`521${user.telefono}@c.us`, newMSG)))
+
+  } catch (error) {
+    console.log({error})
+  }
+    
+  
+
+};
 
