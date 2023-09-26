@@ -1,4 +1,3 @@
-const Aeropuerto = require('../models/Aeropuerto.Model');
 const pool = require('../DB/postgres');   
 
 
