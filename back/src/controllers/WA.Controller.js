@@ -147,19 +147,11 @@ exports.sendWANotification = async (users, incidencia) => {
 
   try {
     
-    const newMSG = `Nueva incidencia generada,
-      *ID: *${incidencia[0].idincidencia}
-      *Nombre: *${incidencia[0].incidencianombre}
-      *Aeropuerto* ${incidencia[0].aeropuertonombre}
-      *Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}
-      *Tipo de incidencia*: ${incidencia[0].tiposervicio}
-      *Fecha: *${incidencia[0].fecha}
-      *Descripción: *${incidencia[0].descripcion}
-      *Total venta: *${venta}
-    
-       Responde a este mensaje colocando de un número 1(Aprobar), 2(Rechazar) seguido de un guión medio y el ID de la incidencia\n*Ejemplo:\n*, 
-       1-45 (Aprobar)
-       2-45 (Rechazar)
+    const newMSG = `
+    Nueva incidencia generada\n*ID*: ${incidencia[0].idincidencia}\n*Nombre*: ${incidencia[0].incidencianombre}\n*Aeropuerto*: ${incidencia[0].aeropuertonombre}\n*Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}\n*Tipo de incidencia*: ${incidencia[0].tiposervicio}\n*Fecha*: ${incidencia[0].fecha}\n*Descripción*: ${incidencia[0].descripcion}\n*Total venta*: ${venta}\n\n
+    Responde a este mensaje colocando de un número 1(Aprobar), 2(Rechazar) seguido de un guión medio y el ID de la incidencia\n*Ejemplo*: \n 
+       1-${incidencia[0].idincidencia} (Aprobar)
+       2-${incidencia[0].idincidencia} (Rechazar)
        `;
 
 
