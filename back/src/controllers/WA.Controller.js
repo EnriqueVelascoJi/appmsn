@@ -8,7 +8,7 @@ const { aprovarInciencia, rechazarIncidencia } = require('../waUtils')
 
 //Init server
 
-const { Client } = require('whatsapp-web.js');
+const { Client, MessageMedia } = require('whatsapp-web.js');
 
 const client = new Client()
 
@@ -136,6 +136,11 @@ client.on('message',async (message) => {
 
 exports.sendWANotification = async (users, incidencia) => {
   
+  const d = new Date(incidencia[0].fecha);
+  let day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+  let month = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+  let year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+  const fecha = `${day} ${month} ${year}`;
 
   const normalData = incidencia
   let costo = 0
@@ -148,7 +153,7 @@ exports.sendWANotification = async (users, incidencia) => {
   try {
     
     const newMSG = `
-    Nueva incidencia generada\n*ID*: ${incidencia[0].idincidencia}\n*Nombre*: ${incidencia[0].incidencianombre}\n*Aeropuerto*: ${incidencia[0].aeropuertonombre}\n*Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}\n*Tipo de incidencia*: ${incidencia[0].tiposervicio}\n*Fecha*: ${incidencia[0].fecha}\n*Descripción*: ${incidencia[0].descripcion}\n*Total venta*: ${venta}\n\n
+  Nueva incidencia generada\n*ID*: ${incidencia[0].idincidencia}\n*Nombre*: ${incidencia[0].incidencianombre}\n*Aeropuerto*: ${incidencia[0].aeropuertonombre}\n*Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}\n*Tipo de incidencia*: ${incidencia[0].tiposervicio}\n*Fecha*: ${fecha}\n*Descripción*: ${incidencia[0].descripcion}\n*Total venta*: $${venta}\n\n
     Responde a este mensaje colocando de un número 1(Aprobar), 2(Rechazar) seguido de un guión medio y el ID de la incidencia\n*Ejemplo*: \n 
        1-${incidencia[0].idincidencia} (Aprobar)
        2-${incidencia[0].idincidencia} (Rechazar)
@@ -166,6 +171,20 @@ exports.sendWANotification = async (users, incidencia) => {
   console.log({contact, chatId})
 
   const response = await client.sendMessage(chatId, newMSG)
+
+  const responseIm = await pool.query(`select i.idincidencia, im.url, im.idimagen
+  from incidencia i
+  inner join imagen im on i.idincidencia = im.idincidencia
+  where i.idincidencia=${id};`);
+
+  if (responseIm.rows.length) {
+    await Promise.all(
+      responseIm.rows.map(async (image) => {
+        const messageMedia = await MessageMedia.fromUrll(image.url);
+        await client.sendMessage(chatId, messageMedia);
+      }),
+    );
+  }
 
   console.log({response})
  
