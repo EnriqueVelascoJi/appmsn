@@ -1,4 +1,3 @@
-const Archivo = require('../models/Archivo.Models')
 const pool = require('../DB/postgres');   
 
 //Get all users
