@@ -175,7 +175,7 @@ exports.sendWANotification = async (users, incidencia) => {
   const responseIm = await pool.query(`select i.idincidencia, im.url, im.idimagen
   from incidencia i
   inner join imagen im on i.idincidencia = im.idincidencia
-  where i.idincidencia=${id};`);
+  where i.idincidencia=${incidencia[0].idincidencia};`);
 
   if (responseIm.rows.length) {
     await Promise.all(
