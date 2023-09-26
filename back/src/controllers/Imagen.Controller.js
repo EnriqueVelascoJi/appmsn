@@ -1,4 +1,3 @@
-const Imagen = require('../models/Imagen.Models')
 const pool = require('../DB/postgres');   
 
 
