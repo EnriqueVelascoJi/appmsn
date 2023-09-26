@@ -86,7 +86,7 @@ const findIncidenciaData = async (id) => {
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     inner join mecanico m on i.idmecanico = m.idmecanico
-    where i.idincidencia=$1;`, [ parseInt(id) ]);
+    where i.idincidencia=${id};`);
 
     console.log({response})
   
