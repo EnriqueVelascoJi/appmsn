@@ -75,6 +75,7 @@ const findWAUsers = async () => {
 };
 const findIncidenciaData = async (id) => {
 
+    console.log({id})
 
     var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
     c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
@@ -86,6 +87,8 @@ const findIncidenciaData = async (id) => {
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     inner join mecanico m on i.idmecanico = m.idmecanico
     where i.idincidencia=$1;`, [ parseInt(id) ]);
+
+    console.log({response})
   
     if(response.rows.length == 0){
         console.log('error')
