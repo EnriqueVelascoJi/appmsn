@@ -228,7 +228,7 @@ exports.sendImages = async (users, id) => {
   if (responseIm.rows.length) {
     await Promise.all(
       responseIm.rows.map(async (image) => {
-        const messageMedia = await MessageMedia.fromUrll(image.url);
+        const messageMedia = await MessageMedia.fromUrl(image.url);
         await Promise.all(
           chats.map(async (chat) => {
             await client.sendMessage(chat,messageMedia);
