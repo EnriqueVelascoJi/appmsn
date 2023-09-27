@@ -135,6 +135,12 @@ client.on('message',async (message) => {
 
 
 exports.sendWANotification = async (users, incidencia) => {
+
+
+  let chats = []
+  const contacts = await client.getContacts()
+
+    
   
   const d = new Date(incidencia[0].fecha);
   let day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
@@ -163,33 +169,20 @@ exports.sendWANotification = async (users, incidencia) => {
   // const rrrr =  await client.sendMessage(`521${users[0].telefono}@c.us`, newMSG)
   // console.log({rrrr})
 
-  const contacts = await client.getContacts()
-  const contact = contacts.find(({ number }) => number === `521${users[0].telefono}`)
-  const { id: { _serialized: chatId } } = contact
+  for(let i = 0; i < users.length; i++) {
+    const contact = contacts.find(({ number }) => number === `521${users[i].telefono}`)
+    const { id: { _serialized: chatId } } = contact
 
+    chats.push(chatId)
 
-  console.log({contact, chatId})
-
-  const response = await client.sendMessage(chatId, newMSG)
-
-  const responseIm = await pool.query(`select i.idincidencia, im.url, im.idimagen
-  from incidencia i
-  inner join imagen im on i.idincidencia = im.idincidencia
-  where i.idincidencia=${incidencia[0].idincidencia};`);
-
-  console.log({responseIm: responseIm.rows})
-
-  if (responseIm.rows.length) {
-    await Promise.all(
-      responseIm.rows.map(async (image) => {
-        const messageMedia = await MessageMedia.fromUrll(image.url);
-        await client.sendMessage(chatId, messageMedia);
-      }),
-    );
   }
 
-  console.log({response})
- 
+  
+
+  await Promise.all(chats.map(async (chat) => {await client.sendMessage(chat, newMSG)})
+  );
+
+
   //  await Promise.all(users.map(user => client.sendMessage(`521${user.telefono}@c.us`, newMSG)))
 
   } catch (error) {
