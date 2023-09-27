@@ -639,12 +639,13 @@ exports.uploadImages = async(req, res) => {
         const queryImages = `INSERT INTO imagen(url,isdeleted,idincidencia) values${data1}`;
         const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
         var response3 = await pool.query(parseQueryImages);
+        
+        const waUsers = await findWAUsers();
+        const incidenciaData1 = await sendImages(waUsers, id)
+
     }
 
-    const waUsers = await findWAUsers();
-
-    const incidenciaData1 = await sendImages(waUsers, id)
-
+    
     res
     .status(201)
     .json({
