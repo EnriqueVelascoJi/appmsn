@@ -87,7 +87,7 @@ client.on('message',async (message) => {
 
       const typeMessage = message.body
 
-	    const q = message.getQuotedMessage() 
+	    const q = await message.getQuotedMessage() 
 
 	console.log({q})
 	    const id = 129;
