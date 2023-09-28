@@ -73,19 +73,23 @@ client.on('message',async (message) => {
     const user = await findUserByWAId(from);
     console.log(user)
 
-    const newMGS = `Bienvenido al sistema de notificaciones\nMSN Servicios Aereos\nPara iniciar sesión escribe la palabra 'login'`;
+    const newMGS = `Tu usuario no está autorizado para recibir notificaciones. Solicita a un admin hacerlo.`;
     
 
-    const msgLogin = `Responde a este mensaje escribiendo tu correo seguido de tu contraseña.\nEjemplo: hola@mail.com msnPassword`
+    //const msgLogin = `Responde a este mensaje escribiendo tu correo seguido de tu contraseña.\nEjemplo: hola@mail.com msnPassword`
 
-    if(message.body === 'Login' || message.body === 'login') {
+   /* if(message.body === 'Login' || message.body === 'login') {
 		return message.reply(msgLogin);
 	}
+ */
 
     if (hasQuotedMsg) {
 
       const typeMessage = message.body
-      if(typeMessage.includes('@')){
+
+	console.log(message.quotedMsg)
+	    const id = 129;
+      /*if(typeMessage.includes('@')){
 
         const isLoggedIn = await login(message.from, typeMessage);
         if (isLoggedIn) {
@@ -98,25 +102,32 @@ client.on('message',async (message) => {
             message.from,
             'Ocurrió un error al intentar autenticar tu usuario. Responde a este mensaje escribiendo tu correo seguido de tu contraseña. Ejemplo: hola@mail.com msnPassword',
           );
-      } else {
+      }*/
+     // else {
 
-        const messIncidencia = typeMessage.trim().split('-');
-        const action = messIncidencia[0]
-        const id = messIncidencia[1]
-        if( action == '1') {
+        //const messIncidencia = typeMessage.trim().split('-');
+        //const action = messIncidencia[0]
+        //const id = messIncidencia[1]
+        if( typeMessage == '1') {
          const response =  await aprovarInciencia(id)
          return client.sendMessage(
           message.from,
           'Se ha aprobado correctamente la incidencia.'
         );
         }
-        if(action == '2') {
+        if(typeMessage == '2') {
           const response = await rechazarIncidencia(id)
           return client.sendMessage(
             message.from,
             'Se ha rechazado correctamente la incidencia.'
             );
         }
+	     if( typeMessage != '1' && typeMessage != '2') {
+         const response =  await aprovarInciencia(id)
+         return client.sendMessage(
+          message.from,
+          'No existe respuesta para este comando.\nIntente nuevamente'
+        );
 
       }
     }
@@ -125,9 +136,11 @@ client.on('message',async (message) => {
         return message.reply(
           `Tu usuario está listo para recibir notificaciones, no es necesario ejecutar ninguna acción`.trim(),
         );
+      } else {
+	return message.reply(newMGS);
       }
 
-    return message.reply(newMGS);
+    
     // const { type, selectedButtonId, hasQuotedMsg, from, selectedRowId, body } = message;
     // console.log({ type, hasQuotedMsg, from, message, type, selectedButtonId, selectedRowId, body });
 });
