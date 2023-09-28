@@ -42,7 +42,7 @@ const findUserByWAId = async (number) => {
     if(number) {
         const realNumber = number.substring(3, 13)
         console.log(realNumber)
-        const userf = await pool.query('SELECT * FROM usuario WHERE telefono=$1',[realNumber])
+        const userf = await pool.query('SELECT * FROM usuario WHERE telefono=$1 and verificadorwa=$2 and aprobador=$3 and isdeleted=$4',[realNumber,true,true,false])
         if(userf.rows.length == 1) {
           return true
         } else {
