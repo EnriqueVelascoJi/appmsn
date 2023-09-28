@@ -1,6 +1,6 @@
 const qrcode = require('qrcode-terminal');
 const pool = require('../DB/postgres');  
-const { aprovarInciencia, rechazarIncidencia } = require('../waUtils')
+const { aprovarInciencia, rechazarIncidencia, comprobarIncidencia } = require('../waUtils')
 
 
 //Import DB Connection
@@ -113,19 +113,36 @@ client.on('message',async (message) => {
         if( typeMessage == '1') {
 
 		const id = q.body.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
-         const response =  await aprovarInciencia(id)
-         return client.sendMessage(
-          message.from,
-          'Se ha aprobado correctamente la incidencia.'
-        );
+		const isPossible = await comprobarIncidencia(id)
+        	if(isPossible) {
+			const response =  await aprovarInciencia(id)
+		        return client.sendMessage(
+		          message.from,
+		          'Se ha aprobado correctamente la incidencia.'
+		        );
+		} else {
+			return client.sendMessage(
+		          message.from,
+		          'La incidencia fue cerrada anteriormente. No es posible aprobarla'
+		        );
+		}
         }
         if(typeMessage == '2') {
 	const id = q.body.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
-          const response = await rechazarIncidencia(id)
+		const isPossible = await comprobarIncidencia(id)
+        	if(isPossible) {
+			const response = await rechazarIncidencia(id)
           return client.sendMessage(
             message.from,
             'Se ha rechazado correctamente la incidencia.'
             );
+		} else {
+			return client.sendMessage(
+		          message.from,
+		          'La incidencia fue cerrada anteriormente. No es posible rechazarla'
+		        );
+		}
+          
         }
 	     if( typeMessage != '1' && typeMessage != '2') {
          const response =  await aprovarInciencia(id)
