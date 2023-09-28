@@ -144,14 +144,12 @@ client.on('message',async (message) => {
 		}
           
         }
-	     if( typeMessage != '1' && typeMessage != '2') {
-         const response =  await aprovarInciencia(id)
+	     
          return client.sendMessage(
           message.from,
           'No existe respuesta para este comando.\nIntente nuevamente'
         );
 
-      }
     }
 
     if (user) {
