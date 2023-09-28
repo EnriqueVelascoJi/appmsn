@@ -87,10 +87,10 @@ client.on('message',async (message) => {
 
       const typeMessage = message.body
 
-	    const q = await message.getQuotedMessage() 
+	    const q = await message.getQuotedMessage()
 
 	console.log({q})
-	    const id = 129;
+	    
       /*if(typeMessage.includes('@')){
 
         const isLoggedIn = await login(message.from, typeMessage);
@@ -111,6 +111,8 @@ client.on('message',async (message) => {
         //const action = messIncidencia[0]
         //const id = messIncidencia[1]
         if( typeMessage == '1') {
+
+		const id = q.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
          const response =  await aprovarInciencia(id)
          return client.sendMessage(
           message.from,
@@ -118,6 +120,7 @@ client.on('message',async (message) => {
         );
         }
         if(typeMessage == '2') {
+	const id = q.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
           const response = await rechazarIncidencia(id)
           return client.sendMessage(
             message.from,
