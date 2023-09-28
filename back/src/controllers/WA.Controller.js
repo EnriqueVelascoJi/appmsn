@@ -112,7 +112,7 @@ client.on('message',async (message) => {
         //const id = messIncidencia[1]
         if( typeMessage == '1') {
 
-		const id = q.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
+		const id = q.body.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
          const response =  await aprovarInciencia(id)
          return client.sendMessage(
           message.from,
@@ -120,7 +120,7 @@ client.on('message',async (message) => {
         );
         }
         if(typeMessage == '2') {
-	const id = q.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
+	const id = q.body.split('*Nombre*')[0].split('*ID*:')[1].split('\n')[0]
           const response = await rechazarIncidencia(id)
           return client.sendMessage(
             message.from,
