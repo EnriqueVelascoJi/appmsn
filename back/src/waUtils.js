@@ -124,5 +124,6 @@ module.exports = {
     findWAUsers,
     findIncidenciaData,
     aprovarInciencia,
-    rechazarIncidencia
+    rechazarIncidencia,comprobarIncidencia
+  
 }
