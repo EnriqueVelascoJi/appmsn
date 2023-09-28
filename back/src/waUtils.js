@@ -115,9 +115,9 @@ const comprobarIncidencia = async (id) =>  {
 
       var response = await pool.query(`SELECT * FROM incidencia where estatus='Rechazada' or estatus='Aprobada' and idincidencia=${id};`);
    if(response.rows.length == 0){
-        return false
+        return true
     }
-  return true
+  return false
 
 }
 module.exports = {
