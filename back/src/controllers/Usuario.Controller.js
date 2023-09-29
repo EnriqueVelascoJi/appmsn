@@ -87,7 +87,7 @@ exports.update_usuario = async(req, res) => {
         
     const data = req.body;
     const id = req.params.id;
-    const query = 'UPDATE usuario SET nombre=$1, apellido=$2, email=$3, telefono=$4, contrasenia=$5, idcliente=$6 WHERE idusuario=$7;';
+    const query = 'UPDATE usuario SET nombre=$1, apellido=$2, email=$3, telefono=$4, contrasenia=$5, idcliente=$6, aprobador=$7, verificadorwa=$8 WHERE idusuario=$9;';
 
     // Create
     const response = await pool.query(query, [
@@ -97,6 +97,8 @@ exports.update_usuario = async(req, res) => {
         data.telefono,
         data.password,
         data.cliente,
+        data.aprobador,
+        data.verificadorWa,
         id
     ]);
         
