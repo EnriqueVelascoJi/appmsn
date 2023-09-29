@@ -98,7 +98,7 @@ exports.update_usuario = async(req, res) => {
         data.password,
         data.cliente,
         data.aprobador,
-        data.verificadorWa,
+        data.verificadorWA,
         id
     ]);
         
