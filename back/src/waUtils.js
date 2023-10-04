@@ -61,8 +61,8 @@ const NUEVA_INCIDENCIA = `
 //   };
 
   
-const findWAUsers = async () => {
-    const query = 'SELECT * FROM usuario where isdeleted=FALSE and aprobador=TRUE and verificadorwa=TRUE';
+const findWAUsers = async (cliente) => {
+    const query = `SELECT * FROM usuario where (idcliente=2 or idcliente=${cliente}) and isdeleted=FALSE and aprobador=TRUE and verificadorwa=TRUE`;
     
     // Get all
     const response = await pool.query(query);
