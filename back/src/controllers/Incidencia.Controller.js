@@ -233,7 +233,7 @@ exports.create_incidencia = async (req, res) => {
         equipo
     } = req.body 
 
-    const waUsers = await findWAUsers();
+    const waUsers = await findWAUsers(cliente);
       
 
     // Resgistrar incidencia    
