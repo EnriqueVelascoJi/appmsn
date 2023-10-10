@@ -51,7 +51,7 @@ exports.get_all_incidencias = async (req, res) => {
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        where i.isdeleted=FALSE order by i.idincidencia;`
+        where i.isdeleted=FALSE order by i.idincidencia desc;`
     // Get all
     const response = await pool.query(query);
 
@@ -133,7 +133,7 @@ exports.get_by_date = async (req, res) => {
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 order by i.idincidencia;`
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 order by i.idincidencia desc;`
         var response = await pool.query(query, [ date1, date2]);
       
         if(response.rows.length == 0){
@@ -527,7 +527,7 @@ exports.get_by_equipos = async (req, res) => {
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5 order by i.idincidencia;`
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5 order by i.idincidencia desc;`
    
 
     // Get all
@@ -566,7 +566,7 @@ exports.get_by_aeropuertos = async (req, res) => {
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4 order by i.idincidencia;`
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4 order by i.idincidencia desc;`
    
 
     // Get all
@@ -604,7 +604,7 @@ exports.get_by_clientes = async (req, res) => {
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
-        where i.isdeleted=FALSE AND fecha >= $1 AND fecha <= $2 AND i.idcliente=$3 order by i.idincidencia;`
+        where i.isdeleted=FALSE AND fecha >= $1 AND fecha <= $2 AND i.idcliente=$3 order by i.idincidencia desc;`
    
 
     // Get all
