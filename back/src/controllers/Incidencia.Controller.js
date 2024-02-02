@@ -277,7 +277,7 @@ exports.create_incidencia = async (req, res) => {
     var response2 = await pool.query(parseQueryRefacciones);
 
     let dataToUpdtae = []
-    for(let i = 0; i < refacciones.length; i++) {
+    for(let i = 0; i < finalEquipos.length; i++) {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         for(let j = 0; j < refacciones.length; j++) {
             const query= `UPDATE refaccion set costo=${refacciones[i].costo}, fechacosto='${refacciones[i].fechaCosto}', fechaventa='${refacciones[i].fechaVenta}', proveedor='${refacciones[i].proveedor}', venta=${refacciones[i].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
