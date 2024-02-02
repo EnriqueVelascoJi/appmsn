@@ -74,8 +74,8 @@ exports.get_incidencia = async (req, res) => {
     const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion, c.nombre nombrecliente, a.nombre nombreaeropuerto, e.equipo nombrequipo, i.descripcion descripcion from incidencia i
 	inner join cliente c on c.idcliente = i.idcliente
 	inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
-	inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     where i.idincidencia=$1`
         var response = await pool.query(query, [ id ]);
