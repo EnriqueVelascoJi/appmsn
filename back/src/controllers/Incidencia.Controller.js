@@ -260,6 +260,7 @@ exports.create_incidencia = async (req, res) => {
     //     );
     //   }
     // }
+    console.log(finalEquipos)
 
     let data = ''
     for(let i = 0; i < finalEquipos.length; i++) {
@@ -270,7 +271,7 @@ exports.create_incidencia = async (req, res) => {
         }
     }
 
-    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia, idequipo) values${data}`;
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia,idequipo) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
 
