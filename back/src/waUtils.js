@@ -82,8 +82,8 @@ const findIncidenciaData = async (id) => {
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
-    inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+        inner join equipo e on ri.idequipo =e.idequipo
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     inner join mecanico m on i.idmecanico = m.idmecanico
     where i.idincidencia=${id};`);
