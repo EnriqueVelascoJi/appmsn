@@ -260,7 +260,7 @@ exports.create_incidencia = async (req, res) => {
     //     );
     //   }
     // }
-    console.log(finalEquipos)
+    console.log('final', finalEquipos)
 
     let data = ''
     for(let i = 0; i < finalEquipos.length; i++) {
