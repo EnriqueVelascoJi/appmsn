@@ -1,129 +1,753 @@
-const pool = require('./DB/postgres');
-const { Client } = require('whatsapp-web.js');
+const pool = require('../DB/postgres');
+const { findWAUsers, findIncidenciaData } = require('../waUtils')
 
-const client = new Client()
+const { sendWANotification, sendImages } = require('./WA.Controller')
 
-const NUEVA_INCIDENCIA = `
-*No.* {name}
-*Región:* {region}
-*Equipo*: {equipo}
-*Tipo de incidencia*: {type}
-*Fecha*: {date}
-*Descripción*: {description}
-{repairs}
-{total}
-`;
 
-// const setIncidenciaMessage = (incidencia) => {
-//     let message = NUEVA_INCIDENCIA;
-//     message = message.replace('{name}', incidencia.incidenciaID);
-//     message = message.replace(
-//       '{region}',
-//       (incidencia.regionId as IRegiones).name,
-//     );
-//     message = message.replace(
-//       '{equipo}',
-//       `${(incidencia.equipoId as IEquipos).name}`,
-//     );
-//     message = message.replace(
-//       '{type}',
-//       `${
-//         (incidencia.incidenciaTypesIds as IIncidenciaCatalogoInterface[])
-//           .map(
-//             ({ verificationPoint, type, name }) =>
-//               `${verificationPoint} - ${type} - ${name}`,
-//           )
-//           .join(',') || 'N/A'
-//       }`,
-//     );
-//     message = message.replace(
-//       '{date}',
-//       `${format(new Date(incidencia.createdAt || ''), 'dd/MM/yyy - HH:mm')}`,
-//     );
-//     message = message.replace('{description}', incidencia.description);
-//     message = message.replace(
-//       '{repairs}',
-//       incidencia.refacciones?.length
-//         ? `*Refacciones*: ${incidencia.refacciones
-//             .map(({ name, price }) => `${name} - x${price}`)
-//             .join(', ')}`
-//         : '',
-//     );
-//     message = message.replace(
-//       '{total}',
-//       incidencia.refacciones?.length
-//         ? `*Total*: $${incidencia.refacciones
-//             .map(({ price, quantity }) => price * quantity)
-//             .reduce((a, b) => a + b)}`
-//         : '',
-//     );
-//     return message;
-//   };
 
-  
-const findWAUsers = async (cliente) => {
-    const query = `SELECT * FROM usuario where (idcliente=2 or idcliente=${cliente}) and isdeleted=FALSE and aprobador=TRUE and verificadorwa=TRUE`;
+
+//Get all Incidencias
+exports.get_all_incidencias = async (req, res) => {
+      
+    // const query = `
+    // SELECT DISTINCT
+    //     i.idincidencia,
+    //     i.nombre,
+    //     i.estatus,
+    //     i.descripcion,
+    //     i.comentario,
+    //     i.ischeckwa,
+    //     i.fecha,
+    //     c.nombre nombrecliente ,
+    //     a.nombre nombreaeropuerto
+        
+        
+    // FROM
+    //     incidencia i
+    // INNER JOIN refacciones_incidencia ri
+    //     ON i.idincidencia = ri.idincidencia
+    //     INNER JOIN refaccion r
+    //     ON ri.idrefaccion = r.idrefaccion
+    //     INNER JOIN equipo_refacciones er
+    //     ON r.idrefaccion = er.idrefaccion
+    //     INNER JOIN equipo e
+    //     ON er.idtipoequipo = e.idtipoequipo
+    //     INNER JOIN cliente_aeropuerto ca
+    //     ON e.idclienteaeropuerto = ca.idclienteaeropuerto
+    //     INNER JOIN aeropuerto a
+    //     ON ca.idaeropuerto = a.idaeropuerto
+    //     INNER JOIN cliente c
+    //     ON ca.idcliente = c.idcliente
+        
     
+        
+    // `;
+    //const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        where i.isdeleted=FALSE order by i.idincidencia desc;`
     // Get all
     const response = await pool.query(query);
 
-    const users = response.rows
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
 
-    return users
+      
+}
+
+exports.get_incidencia = async (req, res) => {
+      
+    const id= req.params.id
+    const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion, c.nombre nombrecliente, a.nombre nombreaeropuerto, e.equipo nombrequipo, i.descripcion descripcion from incidencia i
+	inner join cliente c on c.idcliente = i.idcliente
+	inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
+    inner join refaccion r on ri.idrefaccion = r.idrefaccion
+    where i.idincidencia=$1`
+        var response = await pool.query(query, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
+exports.get_by_equipo = async (req, res) => {
+      
+    const id= req.params.id
+    // const id= 13
+        var response = await pool.query(`select r.idrefaccion, r.costo, r.fechacosto, r.venta, r.fechaventa, r.proveedor, r.isdeleted, r.nombre from equipo_refacciones er
+        inner join refaccion r on er.idrefaccion = r.idrefaccion where er.idtipoequipo =$1 or idtipoequipo=13;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
+exports.get_by_date = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin
+    } = req.body
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = i.idequipo
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 order by i.idincidencia desc;`
+        var response = await pool.query(query, [ date1, date2]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
+exports.ver_imagenes = async (req, res) => {
+    const id= req.params.id
+        var response = await pool.query(`select i.idincidencia, im.url, im.idimagen
+        from incidencia i
+        inner join imagen im on i.idincidencia = im.idincidencia
+        where i.idincidencia=$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+}
+exports.ver_files = async (req, res) => {
+    const id= req.params.id
+        var response = await pool.query(`select i.idincidencia, ar.url, ar.idarchivo
+        from incidencia i
+        inner join archivo ar on i.idincidencia = ar.idincidencia
+        where i.idincidencia=$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+}
+exports.ver_mas = async (req, res) => {
+      
+    const id= req.params.id
+        var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+        c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
+        from incidencia i
+        inner join cliente c on c.idcliente = i.idcliente
+        inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+        inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        inner join equipo e on ri.idequipo = e.idequipo
+        inner join mecanico m on i.idmecanico = m.idmecanico
+        where i.idincidencia=$1;`, [ id ]);
+      
+        if(response.rows.length == 0){
+            console.log('error')
+        }
+      
+        res.status(201)
+            .json({
+                  status: "success",
+                  msg: "Incidencia",
+                  data: response.rows
+                })
+                .end()
+
+      
+}
+
+exports.create_incidencia = async (req, res) => {
+
+    let {
+        idMecanico,
+        nombre,
+        estatus,
+        descripcion,
+        comentario,
+        fecha,
+        //refacciones,
+        tipoServicio,
+        cliente,
+        aeropuerto,
+        //equipo,
+        finalEquipos
+    } = req.body 
+
+    const waUsers = await findWAUsers(cliente);
+    console.log('finall', finalEquipos[0], idMecanico)
+
+      
+
+    // Resgistrar incidencia    
+    var response = await pool.query(
+        'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico,tiposervicio,idcliente,idaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING idincidencia;',
+        [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio,cliente,aeropuerto]
+    )
+    const idIncidenciaNew = response.rows[0].idincidencia;
+
+    console.log('waUsers', waUsers);
+    
+    // if(idIncidenciaNew) {
+    //     const waUsers = await findWAUsers();
+    //      console.log('waUsers', waUsers);
+    //   if (waUsers && waUsers.length) {
+    //     await Promise.all(
+    //       waUsers.map(async (user) =>
+    //         sendWANotification(
+    //           `521${user.telefono}@c.us`,
+    //           response.rows[0],
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // }
+
+    let data = ''
+    for(let i = 0; i < finalEquipos.length; i++) {
+        const refacciones = finalEquipos[i].refaccionesIncidencias
+        const idEquipo = finalEquipos[i].idReal
+        for(let j = 0; j < refacciones.length; j++) {
+            data += `(${refacciones[j].noPiezas},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
+        }
+    }
+
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
+    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
+    var response2 = await pool.query(parseQueryRefacciones);
+
+    let dataToUpdtae = []
+    for(let i = 0; i < finalEquipos.length; i++) {
+        const refacciones = finalEquipos[i].refaccionesIncidencias
+        for(let j = 0; j < refacciones.length; j++) {
+            const query= `UPDATE refaccion set costo=${refacciones[j].costo}, fechacosto='${refacciones[j].fechaCosto}', fechaventa='${refacciones[j].fechaVenta}', proveedor='${refacciones[j].proveedor}', venta=${refacciones[j].precioVenta} WHERE idrefaccion=${refacciones[j].refaccion};`
+            console.log(query)
+            dataToUpdtae.push(pool.query(query))       
+        }
+    }
+        
     
     
-};
-const findIncidenciaData = async (id) => {
 
-    console.log({id})
+    await Promise.all(dataToUpdtae);
 
-    var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, i.tiposervicio, r.proveedor
+    // const incidenciaData1 = await findIncidenciaData(idIncidenciaNew)
+    // if (waUsers && waUsers.length) {
+    //  await sendWANotification(waUsers, incidenciaData1)
+    // }
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: {...req.body, id: idIncidenciaNew}
+    })
+    .end()
+
+   
+
+}
+exports.update_incidencia = async(req, res) => {
+   
+    let {
+        nombre,
+        estatus,
+        descripcion,
+        comentario,
+        fecha,
+        idMecanico,
+        tipoServicio,
+        refacciones
+    } = req.body
+    const id = req.params.id;
+
+
+    try{
+        const query = 'UPDATE incidencia SET nombre=$1, estatus=$2, descripcion=$3, comentario=$4, fecha=$5, idmecanico=$6, tiposervicio=$7 WHERE idincidencia=$8;';
+
+        // Create
+        const response = await pool.query(query, [
+            nombre,
+            estatus,
+            descripcion,
+            comentario,
+            fecha,
+            idMecanico,
+            tipoServicio,
+            id
+        ]);
+        
+        const queryDelete = 'DELETE FROM refacciones_incidencia where idincidencia=$1'
+        // Create
+        const responseDelete = await pool.query(queryDelete, [
+            id
+        ]);
+    const idIncidencia = id;
+
+    let data = ''
+    for(let i = 0; i < refacciones.length; i++) {
+        data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idIncidencia}),`
+    }
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
+    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
+    var response2 = await pool.query(parseQueryRefacciones);
+
+    let dataToUpdtae = []
+    for(let i = 0; i < refacciones.length; i++) {
+        const query= `UPDATE refaccion set costo=${refacciones[i].costo}, fechacosto='${refacciones[i].fechaCosto}', fechaventa='${refacciones[i].fechaVenta}', proveedor='${refacciones[i].proveedor}', venta=${refacciones[i].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
+        console.log(query)
+        dataToUpdtae.push(pool.query(query))
+    }
+
+    await Promise.all(dataToUpdtae);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    
+    }catch(err){
+        console.log(err)
+    }
+        
+    
+}
+exports.delete_incidencia = async(req, res) => {
+
+    const id = req.params.id;
+    const query = 'UPDATE incidencia SET isdeleted=TRUE WHERE idincidencia=$1;';
+
+    // Create
+    const response = await pool.query(query, [
+        id
+    ]);
+        
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: req.body
+    })
+
+}
+exports.get_resumen1 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2`
+    console.log(date1)
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+
+exports.get_resumen2 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin,
+        equipo,
+        aeropuerto,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
+    
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, equipo, cliente, aeropuerto]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_resumen3 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin,
+        aeropuerto,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4`
+    
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, aeropuerto, cliente]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_resumen4 = async (req, res) => {
+      
+    let {
+        fechaInicio,
+        fechaFin,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idcliente=$3`
+    
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, cliente]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_by_equipos = async (req, res) => {
+      
+    
+    let {
+        fechaInicio,
+        fechaFin,
+        equipo,
+        aeropuerto,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
     inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
-    inner join refaccion r on ri.idrefaccion = r.idrefaccion
-    inner join mecanico m on i.idmecanico = m.idmecanico
-    where i.idincidencia=${id};`);
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5 order by i.idincidencia desc;`
+   
 
-    console.log({response})
-  
-    if(response.rows.length == 0){
-        console.log('error')
+    // Get all
+    const response = await pool.query(query, [date1, date2, equipo, cliente, aeropuerto]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_by_aeropuertos = async (req, res) => {
+      
+    
+    let {
+        fechaInicio,
+        fechaFin,
+        aeropuerto,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
+
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4 order by i.idincidencia desc;`
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, aeropuerto, cliente]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.get_by_clientes = async (req, res) => {
+      
+    
+    let {
+        fechaInicio,
+        fechaFin,
+        cliente
+    } = req.body 
+
+    const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
+    const date2 = new Date(fechaFin).toISOString().slice(0, 10)
+    const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    from incidencia i
+    inner join cliente c on c.idcliente = i.idcliente
+    inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
+        inner join refaccion r on ri.idrefaccion = r.idrefaccion
+        where i.isdeleted=FALSE AND fecha >= $1 AND fecha <= $2 AND i.idcliente=$3 order by i.idincidencia desc;`
+   
+
+    // Get all
+    const response = await pool.query(query, [date1, date2, cliente]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+
+      
+}
+exports.uploadImages = async(req, res) => {
+
+    let {
+        id,
+        images,
+    } = req.body 
+
+
+    let data1 = ''
+    if(images.length > 0) {
+        for(let i = 0; i < images.length; i++) {
+            data1 += `('${images[i]}',false,${id}),`
+        }
+        const queryImages = `INSERT INTO imagen(url,isdeleted,idincidencia) values${data1}`;
+        const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        var response3 = await pool.query(parseQueryImages);
+        
+        const waUsers = await findWAUsers();
+        if (waUsers && waUsers.length) {
+            await sendImages(waUsers, id)
+        }
+        
+
     }
-  
-    return response.rows
-           
+
+    
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
 }
+exports.uploadFiles = async(req, res) => {
+    let {
+        id,
+        files,
+    } = req.body 
 
-const aprovarInciencia = async (id) => {
 
-    var response = await pool.query(`UPDATE incidencia SET estatus='Aprobada' where idincidencia=${id};`);
-
-
-}
-
-const rechazarIncidencia = async (id) => {
-
-    var response = await pool.query(`UPDATE incidencia SET estatus='Rechazada' where idincidencia=${id};`);
-
-}
-
-const comprobarIncidencia = async (id) =>  {
-
-      var response = await pool.query(`SELECT * FROM incidencia where idincidencia=${id} and (estatus='Rechazada' or estatus='Aprobada');`);
-   if(response.rows.length == 0){
-        return true
+    let data2 = ''
+    if(files.length > 0) {
+        for(let i = 0; i < files.length; i++) {
+            data2 += `('${files[i]}',false,${id}),`
+        }
+        const queryFiles = `INSERT INTO archivo(url,isdeleted,idincidencia) values${data2}`;
+        const parseQueryFiles = queryFiles.substring(0, queryFiles.length - 1);
+        var response4 = await pool.query(parseQueryFiles);
     }
-  return false
 
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
 }
-module.exports = {
-    findWAUsers,
-    findIncidenciaData,
-    aprovarInciencia,
-    rechazarIncidencia,comprobarIncidencia
-  
+exports.borrarImages = async(req, res) => {
+
+    let {
+        id,
+        ids,
+    } = req.body 
+
+
+    let data1 = '('
+    if(ids.length > 0) {
+        for(let i = 0; i < ids.length; i++) {
+            data1 += `${ids[i]},`
+        }
+        const queryImages = `DELETE FROM imagen WHERE idimagen in ${data1}`;
+        let parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        parseQueryImages += ');'
+        var response3 = await pool.query(parseQueryImages);
+    }
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
+}
+exports.borrarFiles = async(req, res) => {
+    
+    let {
+        id,
+        ids,
+    } = req.body 
+
+
+    let data1 = '('
+    if(ids.length > 0) {
+        for(let i = 0; i < ids.length; i++) {
+            data1 += `${ids[i]},`
+        }
+        const queryImages = `DELETE FROM archivo WHERE idarchivo in ${data1}`;
+        let parseQueryImages = queryImages.substring(0, queryImages.length - 1);
+        parseQueryImages += ');'
+        var response3 = await pool.query(parseQueryImages);
+    }
+    res
+    .status(201)
+    .json({
+        status: "success", 
+        msg: "Resgitro de usuario exitoso.",
+        data: req.body 
+    })
+    .end()
 }
