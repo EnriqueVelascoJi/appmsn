@@ -235,6 +235,8 @@ exports.create_incidencia = async (req, res) => {
     } = req.body 
 
     const waUsers = await findWAUsers(cliente);
+    console.log('final', finalEquipos, idMecanico)
+
       
 
     // Resgistrar incidencia    
@@ -260,7 +262,6 @@ exports.create_incidencia = async (req, res) => {
     //     );
     //   }
     // }
-    console.log('final', finalEquipos)
 
     let data = ''
     for(let i = 0; i < finalEquipos.length; i++) {
