@@ -235,7 +235,7 @@ exports.create_incidencia = async (req, res) => {
     } = req.body 
 
     const waUsers = await findWAUsers(cliente);
-    console.log('finall', finalEquipos, idMecanico)
+    console.log('finall', finalEquipos[0], idMecanico)
 
       
 
