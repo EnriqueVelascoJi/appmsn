@@ -268,7 +268,7 @@ exports.create_incidencia = async (req, res) => {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         const idEquipo = finalEquipos[i].idReal
         for(let j = 0; j < refacciones.length; j++) {
-            data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idEquipo},${idIncidenciaNew}),`
+            data += `(${refacciones[j].noPiezas},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
         }
     }
 
@@ -280,7 +280,7 @@ exports.create_incidencia = async (req, res) => {
     for(let i = 0; i < finalEquipos.length; i++) {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         for(let j = 0; j < refacciones.length; j++) {
-            const query= `UPDATE refaccion set costo=${refacciones[i].costo}, fechacosto='${refacciones[i].fechaCosto}', fechaventa='${refacciones[i].fechaVenta}', proveedor='${refacciones[i].proveedor}', venta=${refacciones[i].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
+            const query= `UPDATE refaccion set costo=${refacciones[j].costo}, fechacosto='${refacciones[j].fechaCosto}', fechaventa='${refacciones[j].fechaVenta}', proveedor='${refacciones[j].proveedor}', venta=${refacciones[j].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
             console.log(query)
             dataToUpdtae.push(pool.query(query))       
         }
