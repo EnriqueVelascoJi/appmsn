@@ -575,8 +575,9 @@ exports.get_by_aeropuertos = async (req, res) => {
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
-    inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
+
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4 order by i.idincidencia desc;`
    
@@ -613,8 +614,8 @@ exports.get_by_clientes = async (req, res) => {
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
-    inner join equipo e on e.idequipo = i.idequipo
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join equipo e on ri.idequipo = e.idequipo
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         where i.isdeleted=FALSE AND fecha >= $1 AND fecha <= $2 AND i.idcliente=$3 order by i.idincidencia desc;`
    
