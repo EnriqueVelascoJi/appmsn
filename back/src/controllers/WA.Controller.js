@@ -184,15 +184,19 @@ exports.sendWANotification = async (users, incidencia) => {
   const normalData = incidencia
   let costo = 0
   let venta = 0
+	let reafEqui = '';
     for(let i = 0; i < normalData.length; i++) {
       costo += normalData[i].nopiezas * normalData[i].costo
       venta += normalData[i].nopiezas * normalData[i].precioventa
+    }
+	for(let i = 0; i < normalData.length; i++) {
+     reafEqui += `${normalData[i].noeconomico} - ${normalData[i].equipo}: ${normalData[i].refaccionnombre}\n`
     }
 
   try {
     
     const newMSG = `
-  Nueva incidencia generada\n*ID*: ${incidencia[0].idincidencia}\n*Nombre*: ${incidencia[0].incidencianombre}\n*Aeropuerto*: ${incidencia[0].aeropuertonombre}\n*Equipo*: ${incidencia[0].noeconomico} - ${incidencia[0].equipo}\n*Tipo de incidencia*: ${incidencia[0].tiposervicio}\n*Fecha*: ${fecha}\n*Descripción*: ${incidencia[0].descripcion}\n*Total venta*: $${venta}\n\n
+  Nueva incidencia generada\n*ID*: ${incidencia[0].idincidencia}\n*Nombre*: ${incidencia[0].incidencianombre}\n*Aeropuerto*: ${incidencia[0].aeropuertonombre}\n*Equipos - Refacciones*:\n${reafEqui}*Tipo de incidencia*: ${incidencia[0].tiposervicio}\n*Fecha*: ${fecha}\n*Descripción*: ${incidencia[0].descripcion}\n*Total venta*: $${venta}\n\n
     Responde a este mensaje colocando un número válido\n*Ejemplo*: \n 
        1 (Aprobar)
        2 (Rechazar)
