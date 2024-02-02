@@ -280,7 +280,7 @@ exports.create_incidencia = async (req, res) => {
     for(let i = 0; i < finalEquipos.length; i++) {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         for(let j = 0; j < refacciones.length; j++) {
-            const query= `UPDATE refaccion set costo=${refacciones[j].costo}, fechacosto='${refacciones[j].fechaCosto}', fechaventa='${refacciones[j].fechaVenta}', proveedor='${refacciones[j].proveedor}', venta=${refacciones[j].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
+            const query= `UPDATE refaccion set costo=${refacciones[j].costo}, fechacosto='${refacciones[j].fechaCosto}', fechaventa='${refacciones[j].fechaVenta}', proveedor='${refacciones[j].proveedor}', venta=${refacciones[j].precioVenta} WHERE idrefaccion=${refacciones[j].refaccion};`
             console.log(query)
             dataToUpdtae.push(pool.query(query))       
         }
