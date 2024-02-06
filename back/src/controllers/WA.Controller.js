@@ -211,9 +211,12 @@ exports.sendWANotification = async (users, incidencia) => {
 
   for(let i = 0; i < users.length; i++) {
     const contact = contacts.find( contact => contact.number == `521${users[i].telefono}`)
-      const { id: { _serialized: chatId } } = contact
+	  if(contact) {
+		  const { id: { _serialized: chatId } } = contact
     chats.push(chatId)
 
+	  }
+      
   }
 
   
