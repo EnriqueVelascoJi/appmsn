@@ -308,16 +308,21 @@ exports.create_incidencia = async (req, res) => {
 }
 exports.update_incidencia = async(req, res) => {
    
+    
     let {
+        idMecanico,
         nombre,
         estatus,
         descripcion,
         comentario,
         fecha,
-        idMecanico,
+        //refacciones,
         tipoServicio,
-        refacciones
-    } = req.body
+        cliente,
+        aeropuerto,
+        //equipo,
+        finalEquipos
+    } = req.body 
     const id = req.params.id;
 
 
@@ -344,21 +349,35 @@ exports.update_incidencia = async(req, res) => {
     const idIncidencia = id;
 
     let data = ''
-    for(let i = 0; i < refacciones.length; i++) {
-        data += `(${refacciones[i].noPiezas},${refacciones[i].costo},${refacciones[i].precioVenta},false,${refacciones[i].refaccion},${idIncidencia}),`
+    for(let i = 0; i < finalEquipos.length; i++) {
+        const refacciones = finalEquipos[i].refaccionesIncidencias
+        const idEquipo = finalEquipos[i].idReal
+        for(let j = 0; j < refacciones.length; j++) {
+            data += `(${refacciones[j].noPiezas},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidencia}),`
+        }
     }
-    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idincidencia) values${data}`;
+
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
 
     let dataToUpdtae = []
-    for(let i = 0; i < refacciones.length; i++) {
-        const query= `UPDATE refaccion set costo=${refacciones[i].costo}, fechacosto='${refacciones[i].fechaCosto}', fechaventa='${refacciones[i].fechaVenta}', proveedor='${refacciones[i].proveedor}', venta=${refacciones[i].precioVenta} WHERE idrefaccion=${refacciones[i].refaccion};`
-        console.log(query)
-        dataToUpdtae.push(pool.query(query))
+    for(let i = 0; i < finalEquipos.length; i++) {
+        const refacciones = finalEquipos[i].refaccionesIncidencias
+        for(let j = 0; j < refacciones.length; j++) {
+            const query= `UPDATE refaccion set costo=${refacciones[j].costo}, fechacosto='${refacciones[j].fechaCosto}', fechaventa='${refacciones[j].fechaVenta}', proveedor='${refacciones[j].proveedor}', venta=${refacciones[j].precioVenta} WHERE idrefaccion=${refacciones[j].refaccion};`
+            console.log(query)
+            dataToUpdtae.push(pool.query(query))       
+        }
     }
 
+    
+
     await Promise.all(dataToUpdtae);
+    const incidenciaData1 = await findIncidenciaData(idIncidencia)
+    if (waUsers && waUsers.length) {
+     await sendWANotification(waUsers, incidenciaData1)
+    }
             
         res
         .status(201)
