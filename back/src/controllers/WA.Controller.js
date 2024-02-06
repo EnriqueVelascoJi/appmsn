@@ -206,6 +206,8 @@ exports.sendWANotification = async (users, incidencia) => {
   // const rrrr =  await client.sendMessage(`521${users[0].telefono}@c.us`, newMSG)
   // console.log({rrrr})
 
+	  console.log({contacts, users})
+
   for(let i = 0; i < users.length; i++) {
     const contact = contacts.find(({ number }) => number === `521${users[i].telefono}`)
     const { id: { _serialized: chatId } } = contact
