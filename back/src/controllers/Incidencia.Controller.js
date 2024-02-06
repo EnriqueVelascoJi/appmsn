@@ -1,4 +1,4 @@
-const pool = require('../DB/postgres');
+ const pool = require('../DB/postgres');
 const { findWAUsers, findIncidenciaData } = require('../waUtils')
 
 const { sendWANotification, sendImages } = require('./WA.Controller')
@@ -324,6 +324,7 @@ exports.update_incidencia = async(req, res) => {
         finalEquipos
     } = req.body 
     const id = req.params.id;
+    const waUsers = await findWAUsers(cliente);
 
 
     try{
