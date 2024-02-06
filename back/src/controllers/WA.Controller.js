@@ -246,9 +246,11 @@ exports.sendImages = async (users, id) => {
 
     for(let i = 0; i < users.length; i++) {
       const contact = contacts.find(({ number }) => number === `521${users[i].telefono}`)
-      const { id: { _serialized: chatId } } = contact
+      if(contact) {
+		  const { id: { _serialized: chatId } } = contact
+    chats.push(chatId)
 
-      chats.push(chatId)
+	  }
 
     }
     
