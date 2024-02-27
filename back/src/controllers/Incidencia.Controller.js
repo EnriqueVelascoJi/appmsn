@@ -658,6 +658,7 @@ exports.uploadImages = async(req, res) => {
     let {
         id,
         images,
+	    cliente
     } = req.body 
 
 
@@ -670,7 +671,7 @@ exports.uploadImages = async(req, res) => {
         const parseQueryImages = queryImages.substring(0, queryImages.length - 1);
         var response3 = await pool.query(parseQueryImages);
         
-        const waUsers = await findWAUsers();
+        const waUsers = await findWAUsers(cliente);
         if (waUsers && waUsers.length) {
             await sendImages(waUsers, id)
         }
