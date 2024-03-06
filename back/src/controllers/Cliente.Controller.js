@@ -23,7 +23,7 @@ exports.get_all_clientes = async (req, res) => {
 exports.get_cliente = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'select c.idcliente, c.nombre, c.descripcion, c.isdeleted, ce.idaeropuerto from cliente c inner join cliente_aeropuerto ce on c.idcliente = ce.idcliente WHERE c.idcliente=$1'
+    const query = 'select c.idcliente, c.nombre, c.descripcion, c.isdeleted, ce.idaeropuerto from cliente c inner join cliente_aeropuerto ce on c.idcliente = ce.idcliente WHERE c.idcliente=$1 AND ce.isdeletd=FALSE'
 
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
@@ -60,7 +60,7 @@ exports.update_cliente= async (req, res) => {
             id
         ]);
         
-        const queryDelete = 'DELETE FROM cliente_aeropuerto where idcliente=$1'
+        const queryDelete = 'UPDATE cliente_aeropuerto SET isdeleted=true where idcliente=$1'
         // Create
         const responseDelete = await pool.query(queryDelete, [
             id
