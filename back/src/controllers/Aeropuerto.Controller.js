@@ -49,7 +49,7 @@ exports.get_aeropuertos_by_cliente = async (req, res) => {
     const query = `select a.idaeropuerto, a.nombre, a.siglas, a.isdeleted, ce.idclienteaeropuerto from cliente_aeropuerto ce
     inner join aeropuerto a
     on a.idaeropuerto = ce.idaeropuerto
-    where ce.idcliente=$1`;
+    where ce.idcliente=$1 AND a.isdeleted=FALSE`;
     
     // Get all aeropuertos
     const response = await pool.query(query, [cliente]);
