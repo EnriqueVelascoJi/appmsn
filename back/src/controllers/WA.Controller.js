@@ -8,7 +8,7 @@ const { aprovarInciencia, rechazarIncidencia, comprobarIncidencia } = require('.
 
 //Init server
 
-const { Client, MessageMedia } = require('whatsapp-web.js');
+const { Client, MessageMedia } = require('whatsapp-web.js'); 
 
 const client = new Client()
 
