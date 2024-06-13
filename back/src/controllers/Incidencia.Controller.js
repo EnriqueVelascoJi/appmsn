@@ -460,7 +460,7 @@ exports.get_resumen2 = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
-    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
+    inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND ri.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
     
 
     // Get all
