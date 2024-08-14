@@ -220,7 +220,7 @@ exports.ver_mas = async (req, res) => {
 exports.create_incidencia = async (req, res) => {
 
     let {
-        idMecanico,
+         mecanicospost,
         nombre,
         estatus,
         descripcion,
@@ -235,14 +235,13 @@ exports.create_incidencia = async (req, res) => {
     } = req.body 
 
     const waUsers = await findWAUsers(cliente);
-    console.log('finall', finalEquipos[0], idMecanico)
 
       
 
     // Resgistrar incidencia    
     var response = await pool.query(
-        'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,idmecanico,tiposervicio,idcliente,idaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING idincidencia;',
-        [nombre, estatus, descripcion, comentario, fecha, idMecanico, tipoServicio,cliente,aeropuerto]
+        'INSERT INTO incidencia(nombre,estatus,descripcion,comentario,fecha,tiposervicio,idcliente,idaeropuerto) values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING idincidencia;',
+        [nombre, estatus, descripcion, comentario, fecha, tipoServicio,cliente,aeropuerto]
     )
     const idIncidenciaNew = response.rows[0].idincidencia;
 
@@ -285,11 +284,27 @@ exports.create_incidencia = async (req, res) => {
             dataToUpdtae.push(pool.query(query))       
         }
     }
+
+
+
         
     
     
 
     await Promise.all(dataToUpdtae);
+
+
+	let data = ''
+    for(let i = 0; i <  mecanicospost.length; i++) {
+        const idMecanico =  mecanicospost[i].idmecanico
+        	
+	data += `(${idMecanico},${idIncidenciaNew}),`
+        
+    }
+
+    const queryRefacciones = `INSERT INTO mecanicos_incidencia(idmecanico,idincidencia) values${data}`;
+    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
+    var response2 = await pool.query(parseQueryRefacciones);
 
 	if(estatus == 'En espera de aprobación'){
 		const incidenciaData1 = await findIncidenciaData(idIncidenciaNew)
