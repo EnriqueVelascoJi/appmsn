@@ -296,7 +296,7 @@ exports.create_incidencia = async (req, res) => {
     await Promise.all(dataToUpdtae);
 
 
-	let data = ''
+	data = ''
     for(let i = 0; i <  mecanicospost.length; i++) {
         const idMecanico =  mecanicospost[i].idmecanico
         	
