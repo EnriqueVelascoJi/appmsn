@@ -199,7 +199,9 @@ exports.ver_mas = async (req, res) => {
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         inner join equipo e on ri.idequipo = e.idequipo
 	inner join tipo_equipo te on e.idtipoequipo = te.idtipoequipo
-        inner join mecanico m on i.idmecanico = m.idmecanico
+        inner join mecanicos_incidencia mi on i.idincidencia = mi.idincidencia
+	inner join mecanico m on mi.idmecanico = m.idmecanico
+
         where i.idincidencia=$1;`, [ id ]);
       
         if(response.rows.length == 0){
