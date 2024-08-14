@@ -401,14 +401,14 @@ exports.update_incidencia = async(req, res) => {
 	    const queryDelete1 = 'DELETE FROM mecanicos_incidencia where idincidencia=$1'
         // Create
         const responseDelete1 = await pool.query(queryDelete, [
-            id
+            idIncidencia
         ]);
 
 	    data = ''
     for(let i = 0; i <  mecanicospost.length; i++) {
         const idMecanico =  mecanicospost[i].idmecanico
         	
-	data += `(${idMecanico},${idIncidenciaNew}),`
+	data += `(${idMecanico},${idIncidencia}),`
         
     }
 
