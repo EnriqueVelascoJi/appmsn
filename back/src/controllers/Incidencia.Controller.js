@@ -304,9 +304,9 @@ exports.create_incidencia = async (req, res) => {
         
     }
 
-    const queryRefacciones = `INSERT INTO mecanicos_incidencia(idmecanico,idincidencia) values${data}`;
-    const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
-    var response2 = await pool.query(parseQueryRefacciones);
+    const queryRefacciones1 = `INSERT INTO mecanicos_incidencia(idmecanico,idincidencia) values${data}`;
+    const parseQueryRefacciones1 = queryRefacciones1.substring(0, queryRefacciones1.length - 1);
+    var response3 = await pool.query(parseQueryRefacciones1);
 
 	if(estatus == 'En espera de aprobación'){
 		const incidenciaData1 = await findIncidenciaData(idIncidenciaNew)
