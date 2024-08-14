@@ -400,7 +400,7 @@ exports.update_incidencia = async(req, res) => {
 
 	    const queryDelete1 = 'DELETE FROM mecanicos_incidencia where idincidencia=$1'
         // Create
-        const responseDelete1 = await pool.query(queryDelete, [
+        const responseDelete1 = await pool.query(queryDelete1, [
             idIncidencia
         ]);
 
