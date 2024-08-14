@@ -71,10 +71,11 @@ exports.get_all_incidencias = async (req, res) => {
 exports.get_incidencia = async (req, res) => {
       
     const id= req.params.id
-    const query = `select *,i.nombre nombreincidencia, r.nombre nombrerefaccion, c.nombre nombrecliente, a.nombre nombreaeropuerto, e.equipo nombrequipo, i.descripcion descripcion from incidencia i
+    const query = `select *,mi.idmecanico, i.nombre nombreincidencia, r.nombre nombrerefaccion, c.nombre nombrecliente, a.nombre nombreaeropuerto, e.equipo nombrequipo, i.descripcion descripcion from incidencia i
 	inner join cliente c on c.idcliente = i.idcliente
 	inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+    inner join mecanicos_incidencia mi on i.idincidencia = mi.idincidencia
     inner join equipo e on ri.idequipo = e.idequipo
     inner join refaccion r on ri.idrefaccion = r.idrefaccion
     where i.idincidencia=$1`
@@ -332,7 +333,7 @@ exports.update_incidencia = async(req, res) => {
    
     
     let {
-        idMecanico,
+        mecanicospost,
         nombre,
         estatus,
         descripcion,
@@ -350,7 +351,7 @@ exports.update_incidencia = async(req, res) => {
 
 
     try{
-        const query = 'UPDATE incidencia SET nombre=$1, estatus=$2, descripcion=$3, comentario=$4, fecha=$5, idmecanico=$6, tiposervicio=$7 WHERE idincidencia=$8;';
+        const query = 'UPDATE incidencia SET nombre=$1, estatus=$2, descripcion=$3, comentario=$4, fecha=$5, tiposervicio=$6 WHERE idincidencia=$7;';
 
         // Create
         const response = await pool.query(query, [
@@ -359,7 +360,6 @@ exports.update_incidencia = async(req, res) => {
             descripcion,
             comentario,
             fecha,
-            idMecanico,
             tipoServicio,
             id
         ]);
@@ -397,7 +397,24 @@ exports.update_incidencia = async(req, res) => {
     
 
     await Promise.all(dataToUpdtae);
-    
+
+	    const queryDelete1 = 'DELETE FROM mecanicos_incidencia where idincidencia=$1'
+        // Create
+        const responseDelete1 = await pool.query(queryDelete, [
+            id
+        ]);
+
+	    data = ''
+    for(let i = 0; i <  mecanicospost.length; i++) {
+        const idMecanico =  mecanicospost[i].idmecanico
+        	
+	data += `(${idMecanico},${idIncidenciaNew}),`
+        
+    }
+
+    const queryRefacciones1 = `INSERT INTO mecanicos_incidencia(idmecanico,idincidencia) values${data}`;
+    const parseQueryRefacciones1 = queryRefacciones1.substring(0, queryRefacciones1.length - 1);
+    var response3 = await pool.query(parseQueryRefacciones1);
             
         res
         .status(201)
