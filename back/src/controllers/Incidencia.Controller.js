@@ -44,7 +44,7 @@ exports.get_all_incidencias = async (req, res) => {
     // `;
     //const query = "SELECT * FROM incidencia where isdeleted=FALSE order by idincidencia"
     const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
-    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, ri.nopiezas, ri.costo, ri.precioventa
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, ri.medida,ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -126,7 +126,7 @@ exports.get_by_date = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
-    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo,ri.medida, ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -192,7 +192,7 @@ exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
         var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
-        c.nombre clientenombre,a.siglas asiglas ,a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, te.siglas tsiglas, i.tiposervicio, r.proveedor
+        c.nombre clientenombre,a.siglas asiglas ,a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre,ri.medida, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, te.siglas tsiglas, i.tiposervicio, r.proveedor
         from incidencia i
         inner join cliente c on c.idcliente = i.idcliente
         inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -270,11 +270,11 @@ exports.create_incidencia = async (req, res) => {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         const idEquipo = finalEquipos[i].idReal
         for(let j = 0; j < refacciones.length; j++) {
-            data += `(${refacciones[j].noPiezas},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
+            data += `(${refacciones[j].noPiezas},${refacciones[j].medida},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
         }
     }
 
-    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,medida,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
 
@@ -376,11 +376,11 @@ exports.update_incidencia = async(req, res) => {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         const idEquipo = finalEquipos[i].idReal
         for(let j = 0; j < refacciones.length; j++) {
-            data += `(${refacciones[j].noPiezas},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidencia}),`
+            data += `(${refacciones[j].noPiezas},${refacciones[j].medida},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidencia}),`
         }
     }
 
-    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
+    const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,medida,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
 
@@ -459,7 +459,7 @@ exports.get_resumen1 = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    const query = `select ri.idrefaccionesincidencia, ri.medida, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2`
     console.log(date1)
    
@@ -493,7 +493,7 @@ exports.get_resumen2 = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    const query = `select ri.idrefaccionesincidencia, ri.medida, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND ri.idequipo=$3 AND i.idcliente=$4 AND i.idaeropuerto=$5`
     
 
@@ -524,7 +524,7 @@ exports.get_resumen3 = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    const query = `select ri.idrefaccionesincidencia,ri.medida, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idaeropuerto=$3 AND i.idcliente=$4`
     
 
@@ -554,7 +554,7 @@ exports.get_resumen4 = async (req, res) => {
 
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
-    const query = `select ri.idrefaccionesincidencia, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
+    const query = `select ri.idrefaccionesincidencia,ri.medida, ri.nopiezas, ri.costo, ri.precioventa from incidencia i 
     inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia where i.isdeleted=FALSE AND i.fecha >= $1 AND i.fecha <= $2 AND i.idcliente=$3`
     
 
@@ -588,7 +588,7 @@ exports.get_by_equipos = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
-    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, ri.nopiezas, ri.costo, ri.precioventa
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre,ri.medida, ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -626,7 +626,7 @@ exports.get_by_aeropuertos = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
-    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri,medida,ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
@@ -665,7 +665,7 @@ exports.get_by_clientes = async (req, res) => {
     const date1 = new Date(fechaInicio).toISOString().slice(0, 10)
     const date2 = new Date(fechaFin).toISOString().slice(0, 10)
     const query = `select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
-    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.nopiezas, ri.costo, ri.precioventa
+    c.idcliente idcliente, c.nombre clientenombre, a.nombre aeropuertonombre, e.noeconomico, e.equipo, ri.medida,ri.nopiezas, ri.costo, ri.precioventa
     from incidencia i
     inner join cliente c on c.idcliente = i.idcliente
     inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
