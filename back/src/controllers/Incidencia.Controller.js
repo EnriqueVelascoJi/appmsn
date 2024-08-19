@@ -274,7 +274,7 @@ exports.create_incidencia = async (req, res) => {
         }
     }
 	
-
+	console.log(data)
     const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,medida,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
     var response2 = await pool.query(parseQueryRefacciones);
