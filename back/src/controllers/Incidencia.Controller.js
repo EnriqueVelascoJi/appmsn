@@ -273,6 +273,7 @@ exports.create_incidencia = async (req, res) => {
             data += `(${refacciones[j].noPiezas},${refacciones[j].medida},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
         }
     }
+	
 
     const queryRefacciones = `INSERT INTO refacciones_incidencia(nopiezas,medida,costo,precioventa,isdeleted,idrefaccion,idequipo,idincidencia) values${data}`;
     const parseQueryRefacciones = queryRefacciones.substring(0, queryRefacciones.length - 1);
