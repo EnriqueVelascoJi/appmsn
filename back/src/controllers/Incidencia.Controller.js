@@ -270,7 +270,7 @@ exports.create_incidencia = async (req, res) => {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         const idEquipo = finalEquipos[i].idReal
         for(let j = 0; j < refacciones.length; j++) {
-            data += `(${refacciones[j].noPiezas},${refacciones[j].medida},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
+            data += `(${refacciones[j].noPiezas},'${refacciones[j].medida}',${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidenciaNew}),`
         }
     }
 	
@@ -378,7 +378,7 @@ exports.update_incidencia = async(req, res) => {
         const refacciones = finalEquipos[i].refaccionesIncidencias
         const idEquipo = finalEquipos[i].idReal
         for(let j = 0; j < refacciones.length; j++) {
-            data += `(${refacciones[j].noPiezas},${refacciones[j].medida},${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidencia}),`
+            data += `(${refacciones[j].noPiezas},'${refacciones[j].medida}',${refacciones[j].costo},${refacciones[j].precioVenta},false,${refacciones[j].refaccion},${idEquipo},${idIncidencia}),`
         }
     }
 
