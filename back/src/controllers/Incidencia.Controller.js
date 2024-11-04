@@ -351,6 +351,8 @@ exports.update_incidencia = async(req, res) => {
     const id = req.params.id;
     const waUsers = await findWAUsers(cliente);
 
+	console.log('-----edit------', finalEquipos)
+
 
     try{
         const query = 'UPDATE incidencia SET nombre=$1, estatus=$2, descripcion=$3, comentario=$4, fecha=$5, tiposervicio=$6 WHERE idincidencia=$7;';
