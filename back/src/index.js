@@ -34,7 +34,7 @@ app.use('/refacciones', require('./routes/Refacciones.Route'))
 
 
 
-app.use('/usuariogd', require('./routes/Usuario.Route'))
+app.use('/usuariogd', require('./routes/Usuariogd.Route'))
 
  
 
