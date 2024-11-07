@@ -188,10 +188,41 @@ exports.ver_files = async (req, res) => {
                 })
                 .end()
 }
+// exports.ver_mas = async (req, res) => {
+      
+//     const id= req.params.id
+//         var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+//         c.nombre clientenombre,a.siglas asiglas ,a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre,ri.medida, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, te.siglas tsiglas, i.tiposervicio, r.proveedor
+//         from incidencia i
+//         inner join cliente c on c.idcliente = i.idcliente
+//         inner join aeropuerto a on a.idaeropuerto = i.idaeropuerto
+//         inner join refacciones_incidencia ri on i.idincidencia = ri.idincidencia
+//         inner join refaccion r on ri.idrefaccion = r.idrefaccion
+//         inner join equipo e on ri.idequipo = e.idequipo
+// 	inner join tipo_equipo te on e.idtipoequipo = te.idtipoequipo
+//         inner join mecanicos_incidencia mi on i.idincidencia = mi.idincidencia
+// 	inner join mecanico m on mi.idmecanico = m.idmecanico
+
+//         where i.idincidencia=$1;`, [ id ]);
+      
+//         if(response.rows.length == 0){
+//             console.log('error')
+//         }
+      
+//         res.status(201)
+//             .json({
+//                   status: "success",
+//                   msg: "Incidencia",
+//                   data: response.rows
+//                 })
+//                 .end()
+
+      
+// }
 exports.ver_mas = async (req, res) => {
       
     const id= req.params.id
-        var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,  m.nombre mecaniconombre,
+        var response = await pool.query(`select i.idincidencia, i.nombre incidencianombre, i.descripcion, i.estatus, i.comentario, i.fecha,
         c.nombre clientenombre,a.siglas asiglas ,a.nombre aeropuertonombre, e.noeconomico, e.equipo, r.nombre,ri.medida, ri.nopiezas, ri.costo, ri.precioventa, r.nombre refaccionnombre, te.siglas tsiglas, i.tiposervicio, r.proveedor
         from incidencia i
         inner join cliente c on c.idcliente = i.idcliente
@@ -200,8 +231,6 @@ exports.ver_mas = async (req, res) => {
         inner join refaccion r on ri.idrefaccion = r.idrefaccion
         inner join equipo e on ri.idequipo = e.idequipo
 	inner join tipo_equipo te on e.idtipoequipo = te.idtipoequipo
-        inner join mecanicos_incidencia mi on i.idincidencia = mi.idincidencia
-	inner join mecanico m on mi.idmecanico = m.idmecanico
 
         where i.idincidencia=$1;`, [ id ]);
       
