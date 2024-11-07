@@ -32,6 +32,10 @@ app.use('/imagen', require('./routes/Imagen.Route'))
 app.use('/refacciones-incidencias', require('./routes/RefaccionesIncidencias.Route'))
 app.use('/refacciones', require('./routes/Refacciones.Route'))
 
+
+
+app.use('/usuariogd', require('./routes/Usuario.Route'))
+
  
 
 
