@@ -11,11 +11,11 @@ router.route('/login').post(login);
 router.route('/:id').patch(update_usuario);
 router.route('/:id').delete(delete_usuario);
 
-router.route('/gd/').get(get_all_usuarios_gd);
-router.route('/gd/:id').get(get_usuario_gd);
-router.route('/gd/').post(create_usuario_gd);
-router.route('/gd/login').post(login_gd);
-router.route('/gd/:id').patch(update_usuario_gd);
+router.route('gd/').get(get_all_usuarios_gd);
+router.route('gd/:id').get(get_usuario_gd);
+router.route('gd/').post(create_usuario_gd);
+router.route('gd/login').post(login_gd);
+router.route('gd/:id').patch(update_usuario_gd);
 
 
 module.exports = router;
