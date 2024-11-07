@@ -233,7 +233,7 @@ exports.update_usuario_gd = async(req, res) => {
     const data = req.body;
     const id = req.params.id;
 
-    const query = 'UPDATE usuario SET name=$1, firstsurname=$2, secondsurname=$3, email=$4, domain=$5, subdomain=$6, area=$7, profile=$8, isactive=$9 WHERE id=$9;';
+    const query = 'UPDATE usuario SET name=$1, firstsurname=$2, secondsurname=$3, email=$4, domain=$5, subdomain=$6, area=$7, profile=$8, isactive=$9 WHERE id=$10;';
 
     // Create
     const response = await pool.query(query, [
@@ -260,7 +260,7 @@ exports.update_usuario_gd = async(req, res) => {
 }
 exports.get_all_usuarios_gd = async (req, res) => {
 
-    const query = 'SELECT * FROM usuariogd where order by id';
+    const query = 'SELECT * FROM usuariogd order by id';
     
     // Get all
     const response = await pool.query(query);
@@ -301,7 +301,7 @@ exports.login_gd = async(req, res) => {
 
     
     //validar usuario
-    if(userData.email && userData.contrasenia){
+    if(userData.email && userData.password){
         const userf = await pool.query('SELECT * FROM usuariogd WHERE email=$1 AND password=$2',[userData.email,userData.password])
         if(userf.rows.length == 1) {
   
