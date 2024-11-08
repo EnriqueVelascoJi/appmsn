@@ -386,6 +386,22 @@ exports.create_project_gd = async(req, res) => {
     }
 }
 
+exports.get_projects_gd = async (req, res) => {
 
+    const query = 'SELECT * FROM projectgd where order by id';
+    
+    // Get all
+    const response = await pool.query(query);
 
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
 
