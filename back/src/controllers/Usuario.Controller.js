@@ -388,7 +388,7 @@ exports.create_project_gd = async(req, res) => {
 
 exports.get_projects_gd = async (req, res) => {
 
-    const query = 'SELECT * FROM projectgd where order by id';
+    const query = 'SELECT * FROM projectgd order by id';
     
     // Get all
     const response = await pool.query(query);
@@ -404,4 +404,5 @@ exports.get_projects_gd = async (req, res) => {
     })
     .end()
 }
+
 
