@@ -332,3 +332,58 @@ exports.login_gd = async(req, res) => {
 
   
 }
+exports.create_poject_gd = async() => {
+
+    let {
+        projectName,
+        projectType,
+        projectDescription ,
+        projectScopeDescription,
+        projectObjective,
+        region,
+        startDate,
+        finalDate   
+    } = req.body 
+
+    try{
+        const query = 'INSERT INTO projectgd(projectName,projecttype,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate) values($1,$2,$3,$4,$5,$6,$7,$8);';
+
+        // Create
+        const response = await pool.query(query, [
+            projectName,
+            projectType,
+            projectDescription ,
+            projectScopeDescription,
+            projectObjective,
+            region,
+            startDate,
+            finalDate   
+        ]);
+
+        const idProject = response.rows[0].id;
+        const queryProcess = 'INSERT INTO processgd(name,idproject,idrequiremnt,idstatus) values($1,$2,$3,$4);';
+
+        // Create
+        const responseProcess = await pool.query(queryProcess, [
+            'Gestión de proyecto | iniciaiva',
+            idProject,
+            null,
+            2
+
+
+        ]);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
