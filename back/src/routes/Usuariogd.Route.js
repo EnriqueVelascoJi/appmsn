@@ -10,7 +10,7 @@ router.route('/:id').get(get_usuario_gd);
 router.route('/').post(create_usuario_gd);
 router.route('/login').post(login_gd);
 router.route('/:id').patch(update_usuario_gd);
-router.route('/project).post(create_project_gd)
+router.route('/project').post(create_project_gd)
 
 
 module.exports = router;
