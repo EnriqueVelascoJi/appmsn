@@ -332,7 +332,7 @@ exports.login_gd = async(req, res) => {
 
   
 }
-exports.create_project_gd = async() => {
+exports.create_project_gd = async(req, res) => {
 
     let {
         projectName,
