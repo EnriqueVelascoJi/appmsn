@@ -332,8 +332,7 @@ exports.login_gd = async(req, res) => {
 
   
 }
-exports.create_project_gd = async(req,res) => {
-    
+exports.create_project_gd = async() => {
 
     let {
         projectName,
@@ -347,7 +346,7 @@ exports.create_project_gd = async(req,res) => {
     } = req.body 
 
     try{
-        const query = 'INSERT INTO projectgd(projectName,projecttype,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate) values($1,$2,$3,$4,$5,$6,$7,$8);';
+        const query = 'INSERT INTO projectgd(projectName,projecttype,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate) values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id;';
 
         // Create
         const response = await pool.query(query, [
@@ -386,5 +385,3 @@ exports.create_project_gd = async(req,res) => {
         console.log(err)
     }
 }
-
-
