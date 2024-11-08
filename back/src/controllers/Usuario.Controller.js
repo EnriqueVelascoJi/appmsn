@@ -332,7 +332,8 @@ exports.login_gd = async(req, res) => {
 
   
 }
-exports.create_poject_gd = async(req,res) => {
+exports.create_project_gd = async(req,res) => {
+    
 
     let {
         projectName,
