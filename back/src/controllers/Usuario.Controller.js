@@ -342,7 +342,8 @@ exports.create_project_gd = async(req, res) => {
         projectObjective,
         region,
         startDate,
-        finalDate   
+        finalDate,
+        userId 
     } = req.body 
 
     try{
@@ -361,7 +362,7 @@ exports.create_project_gd = async(req, res) => {
         ]);
 
         const idProject = response.rows[0].id;
-        const queryProcess = 'INSERT INTO processgd(name,idproject,idrequirement,idstatus) values($1,$2,$3,$4);';
+        const queryProcess = 'INSERT INTO processgd(name,idproject,idrequirement,idstatus,idUsario) values($1,$2,$3,$4,$5);';
 
         // Create
         const responseProcess = await pool.query(queryProcess, [
@@ -388,7 +389,7 @@ exports.create_project_gd = async(req, res) => {
 
 exports.get_projects_gd = async (req, res) => {
 
-    const query = 'SELECT * FROM projectgd order by id';
+    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.idinner join usuariogd ugd  on pgd.idusuario = ugd.idorder by id';
     
     // Get all
     const response = await pool.query(query);
@@ -404,5 +405,88 @@ exports.get_projects_gd = async (req, res) => {
     })
     .end()
 }
+exports.get_partial_projects_gd = async (req, res) => {
+
+    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id order by id';
+    
+    // Get all
+    const response = await pool.query(query);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
+exports.notificate = async(req, res) => {
+
+    let {
+        iddUserSend,
+        idUserReceiver
+    } = req.body 
+
+    try{
+        const query = 'INSERT INTO notificationgd(idUserSend,idUserReceiver) values($1,$2) RETURNING id;';
+
+        // Create
+        const response = await pool.query(query, [
+            iddUserSend,
+            idUserReceiver 
+        ]);            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
+exports.get_all_notifications_gd = async (req, res) => {
+
+    const query = 'SELECT * FROM notificationgd order by id';
+    
+    // Get all
+    const response = await pool.query(query);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
+exports.get_notifications_by_user_gd = async (req, res) => {
+
+    const id = req.params.id;
+    const query = 'SELECT * FROM usuariogd WHERE idusersend=$1';
+    
+    // Get all aeropuertos
+    const response = await pool.query(query, [id]);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
+
 
 
