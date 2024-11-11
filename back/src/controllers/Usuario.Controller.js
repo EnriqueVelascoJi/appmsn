@@ -362,14 +362,15 @@ exports.create_project_gd = async(req, res) => {
         ]);
 
         const idProject = response.rows[0].id;
-        const queryProcess = 'INSERT INTO processgd(name,idproject,idrequirement,idstatus,idUsario) values($1,$2,$3,$4,$5);';
+        const queryProcess = 'INSERT INTO processgd(name,idproject,idrequirement,idstatus,idusario) values($1,$2,$3,$4,$5);';
 
         // Create
         const responseProcess = await pool.query(queryProcess, [
             'Gestión de proyecto | iniciaiva',
             idProject,
             null,
-            2
+            2,
+            userId
 
 
         ]);
