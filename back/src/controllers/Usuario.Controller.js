@@ -390,7 +390,7 @@ exports.create_project_gd = async(req, res) => {
 
 exports.get_projects_gd = async (req, res) => {
 
-    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.idinner join usuariogd ugd  on pgd.idusuario = ugd.idorder by id';
+    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.idinner join usuariogd ugd  on pgd.idusuario = ugd.idorder by pgd.id';
     
     // Get all
     const response = await pool.query(query);
@@ -408,7 +408,7 @@ exports.get_projects_gd = async (req, res) => {
 }
 exports.get_partial_projects_gd = async (req, res) => {
 
-    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id order by id';
+    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id order by pgd.id';
     
     // Get all
     const response = await pool.query(query);
