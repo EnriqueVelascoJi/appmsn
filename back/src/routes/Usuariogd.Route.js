@@ -15,7 +15,7 @@ router.route('/projects').get(get_projects_gd);
 router.route('/partialprojects').get(get_partial_projects_gd);
 router.route('/notifications').get(get_all_notifications_gd);
 router.route('/notifications/:id').get(get_notifications_by_user_gd);
-router.route('/process').post(get_process_gd);
+router.route('/process').get(get_process_gd);
 
 
 
