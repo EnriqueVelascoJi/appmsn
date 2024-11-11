@@ -444,11 +444,11 @@ exports.get_process_gd = async(req, res) => {
 
     let queryProject = ''
 
-  if(idRequirement) {
-        queryProject = 'SELECT * FROM processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.id WHERE idusuario=$1 order by pgd.id';
+ if(idRequirement) {
+        queryProject = 'SELECT *,pgd.id processid FROM processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.id WHERE idusuario=$1 order by pgd.id';
 
     } else  {
-        queryProject = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.id WHERE idusuario=$1 order by pgd.id'
+        queryProject = 'select *,pgd.id processid from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.id WHERE idusuario=$1 order by pgd.id'
     }
     
 
