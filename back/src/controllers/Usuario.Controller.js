@@ -387,6 +387,52 @@ exports.create_project_gd = async(req, res) => {
         console.log(err)
     }
 }
+exports.create_requirement_gd = async(req, res) => {
+
+    let {
+        informationUse,
+        deliverables,
+        issues,
+        techResources,
+        otherResources,
+        aditionalInformation,
+        processId
+    } = req.body 
+
+    try{
+        const query = 'INSERT INTO requirementgd(informationuse,deliverables,issues,techresources,otherresources,aditionalinformation) values($1,$2,$3,$4,$5,$6) RETURNING id;';
+
+        // Create
+        const response = await pool.query(query, [
+            informationUse,
+            deliverables,
+            issues,
+            techResources,
+            otherResources,
+            aditionalInformation
+        ]);
+
+        const idRequirement = response.rows[0].id;
+        const queryProcess = 'UPDATE processgd set idrequirement=$1 where idprocess=$2';
+
+        // Create
+        const responseProcess = await pool.query(queryProcess, [
+            idRequirement,
+            processId
+        ]);
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
 exports.get_process_gd = async(req, res) => {
 
     const id = req.params.id;
