@@ -390,7 +390,7 @@ exports.create_project_gd = async(req, res) => {
 exports.get_process_gd = async(req, res) => {
 
     const id = req.params.id;
-    const query = 'SELECT * FROM processgd WHERE idusuario=$1 RETURNING idrequirement';
+    const query = 'SELECT idrequirement FROM processgd WHERE idusuario=$1';
     
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
