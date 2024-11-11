@@ -387,7 +387,59 @@ exports.create_project_gd = async(req, res) => {
         console.log(err)
     }
 }
+exports.get_process_gd = async(req, res) => {
 
+    const id = req.params.id;
+    const query = 'SELECT * FROM processgd WHERE idusuario=$1 RETURNING idrequirement';
+    
+    // Get all aeropuertos
+    const response = await pool.query(query, [id]);
+    const idRequirement = response.rows[0].idrequirement;
+
+    let queryProject = ''
+
+    if(idRequirement) {
+        queryProject = 'SELECT * FROM processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.idorder by pgd.id';
+
+    } else  {
+        queryProject = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id order by pgd.id'
+    }
+    
+
+    
+    
+    // Get all
+    const finalResponse = await pool.query(queryProject);
+
+    console.log(finalResponse);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: finalResponse.rows
+    })
+    .end()
+}
+exports.get_projects_gd = async (req, res) => {
+
+    const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.idinner join usuariogd ugd  on pgd.idusuario = ugd.idorder by pgd.id';
+    
+    // Get all
+    const response = await pool.query(query);
+
+    console.log(response);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
 exports.get_projects_gd = async (req, res) => {
 
     const query = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.idinner join usuariogd ugd  on pgd.idusuario = ugd.idorder by pgd.id';
