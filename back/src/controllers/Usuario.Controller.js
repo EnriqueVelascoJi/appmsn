@@ -398,11 +398,11 @@ exports.get_process_gd = async(req, res) => {
 
     let queryProject = ''
 
-   if(idRequirement) {
+  if(idRequirement) {
         queryProject = 'SELECT * FROM processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join requirementgd rgd on pgd.idrequirement = rgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.idstatus WHERE idusuario=$1 order by pgd.id';
 
     } else  {
-        queryProject = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idtsatus = sgd.idstatus WHERE idusuario=$1 order by pgd.id'
+        queryProject = 'select * from processgd pgd inner join projectgd prgd on pgd.idproject = prgd.id inner join usuariogd ugd  on pgd.idusuario = ugd.id inner join statusgd sgd on pgd.idstatus = sgd.idstatus WHERE idusuario=$1 order by pgd.id'
     }
     
 
