@@ -413,7 +413,7 @@ exports.create_requirement_gd = async(req, res) => {
         ]);
 
         const idRequirement = response.rows[0].id;
-        const queryProcess = 'UPDATE processgd set idrequirement=$1 where idprocess=$2';
+        const queryProcess = 'UPDATE processgd set idrequirement=$1 where id=$2';
 
         // Create
         const responseProcess = await pool.query(queryProcess, [
