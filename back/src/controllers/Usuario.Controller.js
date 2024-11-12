@@ -374,6 +374,18 @@ exports.create_project_gd = async(req, res) => {
 
 
         ]);
+        const queryNotification = 'INSERT INTO notificaciongd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+
+        // Create
+        const responseNotification = await pool.query(queryNotification, [
+            'Gestión de proyecto | iniciaiva',
+            userId,
+            17,
+            idProject,
+            'project'
+
+
+        ]);
             
         res
         .status(201)
@@ -570,7 +582,7 @@ exports.get_all_notifications_gd = async (req, res) => {
 exports.get_notifications_by_user_gd = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'SELECT * FROM usuariogd WHERE idusersend=$1';
+    const query = 'SELECT * FROM notificationgd WHERE iduserreceiver=$1 order by id';
     
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
