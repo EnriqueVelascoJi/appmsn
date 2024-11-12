@@ -378,7 +378,6 @@ exports.create_project_gd = async(req, res) => {
 
         // Create
         const responseNotification = await pool.query(queryNotification, [
-            'Gestión de proyecto | iniciaiva',
             userId,
             17,
             idProject,
