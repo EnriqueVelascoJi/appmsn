@@ -597,6 +597,35 @@ exports.get_notifications_by_user_gd = async (req, res) => {
     })
     .end()
 }
+exports.update_project_gd = async(req, res) => {
 
+    
+    let {
+        idProject
+    } = req.body
+
+    try{
+        const query = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
+
+        // Create
+        const response = await pool.query(query, [
+            true,
+            idProject
+        ]);
+
+        
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
 
 
