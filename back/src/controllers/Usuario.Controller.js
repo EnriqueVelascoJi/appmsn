@@ -374,7 +374,7 @@ exports.create_project_gd = async(req, res) => {
 
 
         ]);
-        const queryNotification = 'INSERT INTO notificaciongd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
 
         // Create
         const responseNotification = await pool.query(queryNotification, [
