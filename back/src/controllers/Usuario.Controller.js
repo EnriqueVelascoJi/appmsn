@@ -407,7 +407,8 @@ exports.create_requirement_gd = async(req, res) => {
         techResources,
         otherResources,
         aditionalInformation,
-        processId
+        processId,
+        userId 
     } = req.body 
 
     try{
@@ -430,6 +431,18 @@ exports.create_requirement_gd = async(req, res) => {
         const responseProcess = await pool.query(queryProcess, [
             idRequirement,
             processId
+        ]);
+
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+
+        // Create
+        const responseNotification = await pool.query(queryNotification, [
+            userId,
+            17,
+            idRequirement,
+            'requirement'
+
+
         ]);
             
         res
