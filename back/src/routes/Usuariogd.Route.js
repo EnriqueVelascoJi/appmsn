@@ -9,7 +9,7 @@ router.route('/').get(get_all_usuarios_gd);
 router.route('/usuariogd/:id').get(get_usuario_gd);
 router.route('/').post(create_usuario_gd);
 router.route('/login').post(login_gd);
-router.route('/:id').patch(update_usuario_gd);
+//router.route('/:id').patch(update_usuario_gd);
 router.route('/project').post(create_project_gd);
 router.route('/requirement').post(create_requirement_gd);
 router.route('/projects').get(get_projects_gd);
