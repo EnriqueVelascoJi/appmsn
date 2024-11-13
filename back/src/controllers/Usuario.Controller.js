@@ -581,7 +581,7 @@ exports.get_all_notifications_gd = async (req, res) => {
 exports.get_notifications_by_user_gd = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'SELECT * FROM notificationgd WHERE iduserreceiver=$1 AND isactive=FALSE order by id';
+    const query = 'SELECT * FROM notificationgd WHERE iduserreceiver=$1 AND isactive=TRUE order by id';
     
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
