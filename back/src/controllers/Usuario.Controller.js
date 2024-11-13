@@ -601,19 +601,31 @@ exports.update_project_gd = async(req, res) => {
 
     
     let {
+        idNotification,
         idProject,
         idUserSend,
         idUserReceiver
     } = req.body
 
     try{
-        const query = 'UPDATE projectgd SET isprojectaccepted=$1, isanswered=$2 WHERE id=$3;';
+        const query = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
 
         // Create
         const response = await pool.query(query, [
             true,
-            true,
             idProject
+        ]);
+
+        const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+
+        // Create
+        const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+            false,
+            false,
+            idNotification,
+
+
+
         ]);
 
         const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
@@ -642,3 +654,4 @@ exports.update_project_gd = async(req, res) => {
         console.log(err)
     }
 }
+
