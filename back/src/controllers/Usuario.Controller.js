@@ -581,7 +581,7 @@ exports.get_all_notifications_gd = async (req, res) => {
 exports.get_notifications_by_user_gd = async (req, res) => {
 
     const id = req.params.id;
-    const query = 'SELECT * FROM notificationgd WHERE iduserreceiver=$1 order by id';
+    const query = 'SELECT * FROM notificationgd WHERE iduserreceiver=$1 AND isactive=FALSE order by id';
     
     // Get all aeropuertos
     const response = await pool.query(query, [id]);
@@ -599,33 +599,32 @@ exports.get_notifications_by_user_gd = async (req, res) => {
 }
 exports.update_project_gd = async(req, res) => {
 
-     
-    let {
-        idProject
-    } = req.body
-
-    try{
-        const query = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
-
-        // Create
-        const response = await pool.query(query, [
-            true,
-            idProject
-        ]);
-
         
+        let {
+            idProject
+        } = req.body
+
+        try{
+            const query = 'UPDATE projectgd SET isprojectaccepted=$1, isanswered=$2 WHERE id=$3;';
+
+            // Create
+            const response = await pool.query(query, [
+                true,
+                true,
+                idProject
+            ]);
+
             
-        res
-        .status(201)
-        .json({
-        status: "success",
-        msg: "Recording sucessfully",
-        data: req.body
-        })
-        .end()
-    }catch(err){
-        console.log(err)
+                
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        }catch(err){
+            console.log(err)
+        }
     }
-}
-
-
