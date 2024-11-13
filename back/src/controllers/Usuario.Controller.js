@@ -605,7 +605,7 @@ exports.update_project_gd = async(req, res) => {
     } = req.body
 
     try{
-        const query = 'UPDATE projectgd SET isProjectAccepted=$1 WHERE id=$2;';
+        const query = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
 
         // Create
         const response = await pool.query(query, [
