@@ -599,7 +599,7 @@ exports.get_notifications_by_user_gd = async (req, res) => {
 }
 exports.update_project_gd = async(req, res) => {
 
-    
+     
     let {
         idProject
     } = req.body
