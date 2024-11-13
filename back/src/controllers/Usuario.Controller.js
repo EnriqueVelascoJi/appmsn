@@ -599,32 +599,46 @@ exports.get_notifications_by_user_gd = async (req, res) => {
 }
 exports.update_project_gd = async(req, res) => {
 
-        
-        let {
+    
+    let {
+        idProject,
+        idUserSend,
+        idUserReceiver
+    } = req.body
+
+    try{
+        const query = 'UPDATE projectgd SET isprojectaccepted=$1, isanswered=$2 WHERE id=$3;';
+
+        // Create
+        const response = await pool.query(query, [
+            true,
+            true,
             idProject
-        } = req.body
+        ]);
 
-        try{
-            const query = 'UPDATE projectgd SET isprojectaccepted=$1, isanswered=$2 WHERE id=$3;';
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
 
-            // Create
-            const response = await pool.query(query, [
-                true,
-                true,
-                idProject
-            ]);
+        // Create
+        const responseNotification = await pool.query(queryNotification, [
+            idUserSend,
+            idUserReceiver,
+            idProject,
+            'projectResponse'
 
+
+        ]);
+
+        
             
-                
-            res
-            .status(201)
-            .json({
-            status: "success",
-            msg: "Recording sucessfully",
-            data: req.body
-            })
-            .end()
-        }catch(err){
-            console.log(err)
-        }
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
     }
+}
