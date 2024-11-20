@@ -444,7 +444,18 @@ exports.create_requirement_gd = async(req, res) => {
 
 
         ]);
-            
+
+        const queryProcedureDict = 'INSERT INTO process_procedure_gd(idprocess,idprocedure) values($1,$2);'
+        const responseProcedureDict = await pool.query(queryProcedureDict, [
+            processId,
+            1
+        ]);
+        const queryProcedureGlosary = 'INSERT INTO process_procedure_gd(idprocess,idprocedure) values($1,$2);'
+        const responseProcedureGlosary = await pool.query(queryProcedureGlosary, [
+            processId,
+            2
+        ]);
+
         res
         .status(201)
         .json({
@@ -723,4 +734,51 @@ exports.update_requirement_gd = async(req, res) => {
     }catch(err){
         console.log(err)
     }
+}
+exports.create_dict_procedure = async(req, res) => {
+    let {
+        justification,
+        idProcessProcedure
+    } = req.body 
+
+    try{
+        const query = 'INSERT INTO dict_procedure_gd(justification) values($1) RETURNING id;';
+
+        // Create
+        const response = await pool.query(query, [
+            justification
+        ]);
+
+        const idDictProcedure = response.rows[0].id;
+        const queryDict = 'UPDATE process_procedure_gd set idassociate=$1 where id=$2';
+
+        // Create
+        const responseProcess = await pool.query(queryDict, [
+            idDictProcedure,
+            idProcessProcedure
+        ]);
+    }catch(err){
+        console.log(err)
+    }
+
+}
+exports.update_dict_procedure = async(req, res) => {
+    let {
+        documenRef,
+        idDictProcedure
+    } = req.body 
+
+    try{
+    
+        const queryDict = 'UPDATE dict_procedure_gd set documentRef=$1 where id=$2';
+
+        // Create
+        const responseProcess = await pool.query(queryDict, [
+            documenRef,
+            idDictProcedure
+        ]);
+    }catch(err){
+        console.log(err)
+    }
+
 }
