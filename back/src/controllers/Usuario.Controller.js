@@ -873,3 +873,32 @@ exports.get_projects = async(req, res) => {
     })
     .end()
 }
+
+exports.get_project = async(req, res) => {
+
+    const id = req.params.id;
+
+
+    const queryProject = `select *,p.id idproject from project p  
+                            inner join usuariogd u on p.idusuario = u.id 
+                            WHERE p.id=$! order by p.id`
+    const responseProject = await pool.query(queryProject, [id]);
+    const queryParticipants = `select *,p.id idproject from project p  
+                            inner join usuariogd u on p.idusuario = u.id 
+                            WHERE p.id=$! order by p.id`
+    const responseParticipants = await pool.query(queryParticipants, [id]);
+    
+    const response = {
+        projectInformation: responseProject.rows,
+        participants: responseParticipants.rows
+    }
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response
+    })
+    .end()
+}
+
