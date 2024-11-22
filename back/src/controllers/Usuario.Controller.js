@@ -784,3 +784,78 @@ exports.update_dict_procedure = async(req, res) => {
     }
 
 }
+exports.create_project = async(req, res) => {
+
+    const projectInformation = req.body
+    const {personalInformation, context, participants} = projectInformation
+    const {
+        projectName,
+        projectType,
+        projectDescription ,
+        projectScopeDescription,
+        projectObjective,
+        region,
+        startDate,
+        finalDate,
+        informationUse,
+        deliverables,
+        aditionalInformation,
+        userId 
+    } = context 
+
+    try{
+        const queryProject = 'INSERT INTO project(projectname,projecttype,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate,informationuse,deliverables,aditionalinformation,idusuario,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id;';
+
+        // Create
+        const responseProject = await pool.query(queryProject, [
+            projectName,
+            projectType,
+            projectDescription ,
+            projectScopeDescription,
+            projectObjective,
+            region,
+            startDate,
+            finalDate,
+            informationUse,
+            deliverables,
+            aditionalInformation,
+            userId,
+            2
+        ]);
+
+
+        //Notificaction
+        const idProject = response.rows[0].id;
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+        const responseNotification = await pool.query(queryNotification, [
+            userId,
+            17,
+            idProject,
+            'project'
+
+
+        ]);
+            
+        //Participants
+        let data = ''
+        for(let i = 0; i < participants.length; i++) {
+            const participant = participants[i]
+            data += `('${participant.name}','${participant.surname}','${participant.email}','${participant.position}',${participant.area},${participant.rol},${idProject}),`
+        }
+        
+        const queryParticipant = `INSERT INTO participant(name,surname,email,position,area,rol,idproject) values${data}`;
+        const parseQueryParticipant = queryParticipant.substring(0, queryParticipant.length - 1);
+        const responseParticipant = await pool.query(parseQueryParticipant);
+
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
