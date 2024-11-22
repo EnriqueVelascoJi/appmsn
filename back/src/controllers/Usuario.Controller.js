@@ -823,7 +823,7 @@ exports.create_project = async(req, res) => {
 
 
         //Notificaction
-        const idProject = response.rows[0].id;
+        const idProject = responseProject.rows[0].id;
         const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
         const responseNotification = await pool.query(queryNotification, [
             userId,
