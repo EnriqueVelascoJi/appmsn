@@ -881,11 +881,11 @@ exports.get_project = async(req, res) => {
 
     const queryProject = `select *,p.id idproject from project p  
                             inner join usuariogd u on p.idusuario = u.id 
-                            WHERE p.id=$! order by p.id`
+                            WHERE p.id=$1 order by p.id`
     const responseProject = await pool.query(queryProject, [id]);
     const queryParticipants = `select *,p.id idproject from project p  
                             inner join usuariogd u on p.idusuario = u.id 
-                            WHERE p.id=$! order by p.id`
+                            WHERE p.id=$1 order by p.id`
     const responseParticipants = await pool.query(queryParticipants, [id]);
     
     const response = {
@@ -901,4 +901,3 @@ exports.get_project = async(req, res) => {
     })
     .end()
 }
-
