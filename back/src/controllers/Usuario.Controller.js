@@ -857,3 +857,19 @@ exports.create_project = async(req, res) => {
         console.log(err)
     }
 }
+exports.get_prjects = async(req, res) => {
+
+    const id = req.params.id;
+
+    const query = 'select * from project p  inner join usuariogd u  on p.idusuario = u.id WHERE p.idusuario=$1 order by p.id';
+    const response = await pool.query(query, [id]);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
