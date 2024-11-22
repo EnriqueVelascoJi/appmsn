@@ -883,9 +883,9 @@ exports.get_project = async(req, res) => {
                             inner join usuariogd u on p.idusuario = u.id 
                             WHERE p.id=$1 order by p.id`
     const responseProject = await pool.query(queryProject, [id]);
-    const queryParticipants = `select *,p.id idproject from project p  
-                            inner join usuariogd u on p.idusuario = u.id 
-                            WHERE p.id=$1 order by p.id`
+    const queryParticipants = `select * from project p
+                                inner join participant pa on p.id = pa.idproject
+                                WHERE p.id=$1 order by p.id`
     const responseParticipants = await pool.query(queryParticipants, [id]);
     
     const response = {
