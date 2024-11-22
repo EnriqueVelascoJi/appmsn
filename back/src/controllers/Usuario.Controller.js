@@ -912,7 +912,7 @@ exports.update_status_project = async(req, res) => {
     } = req.body
 
     try{
-        const queryProject = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
+        const queryProject = 'UPDATE project SET isprojectaccepted=$1 WHERE id=$2;';
         const response = await pool.query(queryProject, [
             true,
             idProject
