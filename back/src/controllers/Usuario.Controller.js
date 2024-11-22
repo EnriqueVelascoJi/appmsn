@@ -901,3 +901,60 @@ exports.get_project = async(req, res) => {
     })
     .end()
 }
+exports.update_status_project = async(req, res) => {
+
+    
+    let {
+        idNotification,
+        idProject,
+        idUserSend,
+        idUserReceiver
+    } = req.body
+
+    try{
+        const queryProject = 'UPDATE projectgd SET isprojectaccepted=$1 WHERE id=$2;';
+        const response = await pool.query(queryProject, [
+            true,
+            idProject
+        ]);
+
+        const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+
+        // Create
+        const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+            false,
+            false,
+            idNotification,
+
+
+
+        ]);
+
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+
+        // Create
+        const responseNotification = await pool.query(queryNotification, [
+            idUserSend,
+            idUserReceiver,
+            idProject,
+            'projectAccepted'
+
+
+        ]);
+
+        
+            
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
