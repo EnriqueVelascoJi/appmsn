@@ -790,7 +790,6 @@ exports.create_project = async(req, res) => {
     const {personalInformation, context, participants} = projectInformation
     const {
         projectName,
-        projectType,
         projectDescription ,
         projectScopeDescription,
         projectObjective,
@@ -804,12 +803,11 @@ exports.create_project = async(req, res) => {
     } = context 
 
     try{
-        const queryProject = 'INSERT INTO project(projectname,projecttype,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate,informationuse,deliverables,aditionalinformation,idusuario,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id;';
+        const queryProject = 'INSERT INTO project(projectname,projectdescription,projectscopedescription,projectobjective,region,startdate,finaldate,informationuse,deliverables,aditionalinformation,idusuario,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id;';
 
         // Create
         const responseProject = await pool.query(queryProject, [
             projectName,
-            projectType,
             projectDescription ,
             projectScopeDescription,
             projectObjective,
