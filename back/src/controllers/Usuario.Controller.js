@@ -912,9 +912,10 @@ exports.update_status_project = async(req, res) => {
     } = req.body
 
     try{
-        const queryProject = 'UPDATE project SET isprojectaccepted=$1 WHERE id=$2;';
+        const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2 WHERE id=$3;';
         const response = await pool.query(queryProject, [
             true,
+            4,
             idProject
         ]);
 
@@ -956,5 +957,3 @@ exports.update_status_project = async(req, res) => {
         console.log(err)
     }
 }
-
-
