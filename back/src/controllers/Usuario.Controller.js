@@ -989,5 +989,68 @@ exports.update_status_project = async(req, res) => {
         console.log(err)
     }
 }
+exports.update_project = async(req, res) => {
+
+    const projectInformation = req.body
+    const idProject = req.params.id;
+    const {personalInformation, context, participants} = projectInformation
+    const {
+        projectName,
+        projectDescription ,
+        projectScopeDescription,
+        projectObjective,
+        region,
+        startDate,
+        finalDate,
+        informationUse,
+        deliverables,
+        aditionalInformation,
+        userId 
+    } = context 
+
+    try{
+        const queryProject = 'UPDATE project SET projectname=$1,projectdescription=$2,projectscopedescription=$3,projectobjective=$4,region=$5,startdate=$6,finaldate=$7,informationuse=$8,deliverables=$9,aditionalinformation=$10,idusuario=$11,idstatus=$12 WHERE id=$13;';
+
+        // Create
+        const responseProject = await pool.query(queryProject, [
+            projectName,
+            projectDescription ,
+            projectScopeDescription,
+            projectObjective,
+            region,
+            startDate,
+            finalDate,
+            informationUse,
+            deliverables,
+            aditionalInformation,
+            userId,
+            2,
+            idProject
+        ]);
+
+
+        //Notificaction
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+        const responseNotification = await pool.query(queryNotification, [
+            userId,
+            17,
+            idProject,
+            'projectUpdated'
+
+
+        ]);
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
+
 
 
