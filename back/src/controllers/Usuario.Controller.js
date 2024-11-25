@@ -924,7 +924,7 @@ exports.update_status_project = async(req, res) => {
         // Create
         const responseUpdateNotification = await pool.query(queryUpdateNotification, [
             false,
-            false,
+            true,
             idNotification,
 
 
