@@ -605,7 +605,7 @@ exports.get_all_notifications_gd = async (req, res) => {
 exports.get_notifications_by_user_gd = async (req, res) => {
 
     const id = req.params.id;
-    const query = `SELECT usgd.id iduser, * FROM  notificationgd ngd
+    const query = `SELECT usgd.id iduser, ngd.id idnotification,* FROM  notificationgd ngd
 inner join usuariogd usgd on ngd.idusersend = usgd.id
 WHERE ngd.iduserreceiver=$1 AND ngd.isactive=TRUE `;
     
