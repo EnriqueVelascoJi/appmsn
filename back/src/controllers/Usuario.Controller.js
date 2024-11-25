@@ -914,7 +914,7 @@ exports.update_status_project = async(req, res) => {
     } = req.body
 
     try{
-        if(flag === 'accepetd') {
+        if(flag === 'accepted') {
             const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2 WHERE id=$3;';
             const response = await pool.query(queryProject, [
                 true,
