@@ -908,52 +908,86 @@ exports.update_status_project = async(req, res) => {
         idNotification,
         idProject,
         idUserSend,
-        idUserReceiver
+        idUserReceiver,
+        flag,
+        rejected
     } = req.body
 
     try{
-        const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2 WHERE id=$3;';
-        const response = await pool.query(queryProject, [
-            true,
-            4,
-            idProject
-        ]);
+        if(flag === 'accepetd') {
+            const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2 WHERE id=$3;';
+            const response = await pool.query(queryProject, [
+                true,
+                4,
+                idProject
+            ]);
 
-        const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+            const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
 
-        // Create
-        const responseUpdateNotification = await pool.query(queryUpdateNotification, [
-            false,
-            true,
-            idNotification,
-
-
-
-        ]);
-
-        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
-
-        // Create
-        const responseNotification = await pool.query(queryNotification, [
-            idUserSend,
-            idUserReceiver,
-            idProject,
-            'projectAccepted'
+            // Create
+            const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+                false,
+                true,
+                idNotification,
 
 
-        ]);
 
-        
-            
-        res
-        .status(201)
-        .json({
-        status: "success",
-        msg: "Recording sucessfully",
-        data: req.body
-        })
-        .end()
+            ]);
+
+            const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+
+            // Create
+            const responseNotification = await pool.query(queryNotification, [
+                idUserSend,
+                idUserReceiver,
+                idProject,
+                'projectAccepted'
+
+
+            ]);
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        } else {
+            const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2, rejected=$3 WHERE id=$4;';
+            const response = await pool.query(queryProject, [
+                false,
+                5,
+                rejected,
+                idProject
+            ]);
+
+            const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+            const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+                false,
+                true,
+                idNotification
+            ]);
+
+            const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+            const responseNotification = await pool.query(queryNotification, [
+                idUserSend,
+                idUserReceiver,
+                idProject,
+                'projectRejected'
+            ]);
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        }
     }catch(err){
         console.log(err)
     }
 }
+
+
