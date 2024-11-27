@@ -985,6 +985,26 @@ exports.update_status_project = async(req, res) => {
             })
             .end()
         }
+
+        if(flag === 'view') {
+           
+            const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+
+            // Create
+            const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+                false,
+                true,
+                idNotification,
+            ]);
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        }
     }catch(err){
         console.log(err)
     }
