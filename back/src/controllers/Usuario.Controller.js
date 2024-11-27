@@ -1073,5 +1073,77 @@ exports.update_project = async(req, res) => {
     }
 }
 
+exports.create_glosary = async(req, res) => {
 
+    const {
+    term,
+    definition,
+    abbreviattions,
+    synonym,
+    example,
+    region,
+    area,
+    domain,
+    subdomain,
+    owner,
+    status,
+    creationDate,
+    updateDate,
+    documentationResponsible,
+    updateResponsible,
+    comment,
+    idProject
+    } = req.body
+   
+    try{
+        const queryProject = 'INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING id;';
+
+        // Create
+        const responseProject = await pool.query(queryProject, [
+            term,
+            definition,
+            abbreviattions,
+            synonym,
+            example,
+            region,
+            area,
+            domain,
+            subdomain,
+            owner,
+            status,
+            creationDate,
+            updateDate,
+            documentationResponsible,
+            updateResponsible,
+            comment,
+            idProject,
+            3
+        ]);
+
+
+        //Notificaction
+        const idGlosary = responseProject.rows[0].id;
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+        const responseNotification = await pool.query(queryNotification, [
+            userId,
+            17,
+            idGlosary,
+            'glosary'
+
+
+        ]);
+            
+    
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
+}
 
