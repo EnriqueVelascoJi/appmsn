@@ -1147,3 +1147,21 @@ exports.create_glosary = async(req, res) => {
         console.log(err)
     }
 }
+
+exports.get_glosary_terms = async(req, res) => {
+
+    const id = req.params.id;
+
+    const query = 'SELECT * FROM glosary where id=$1 order by id';
+    const response = await pool.query(query, [id]);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
+
