@@ -953,7 +953,8 @@ exports.update_status_project = async(req, res) => {
             data: req.body
             })
             .end()
-        } else {
+        } 
+        if(flag === 'rejected') {
             const queryProject = 'UPDATE project SET isprojectaccepted=$1, idstatus=$2, rejected=$3 WHERE id=$4;';
             const response = await pool.query(queryProject, [
                 false,
