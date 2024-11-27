@@ -1006,6 +1006,46 @@ exports.update_status_project = async(req, res) => {
             })
             .end()
         }
+        if(flag === 'glosaryAccepted') {
+            const queryProject = 'UPDATE glosary SET isaccepted=$1, idstatus=$2 WHERE idproject=$3;';
+            const response = await pool.query(queryProject, [
+                true,
+                4,
+                idProject
+            ]);
+
+            const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+
+            // Create
+            const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+                false,
+                true,
+                idNotification,
+
+
+
+            ]);
+
+            const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+
+            // Create
+            const responseNotification = await pool.query(queryNotification, [
+                idUserSend,
+                idUserReceiver,
+                idProject,
+                'glosaryAccepted'
+
+
+            ]);
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        } 
     }catch(err){
         console.log(err)
     }
@@ -1152,7 +1192,7 @@ exports.get_glosary_terms = async(req, res) => {
 
     const id = req.params.id;
 
-    const query = 'SELECT * FROM glosary where id=$1 order by id';
+    const query = 'SELECT * FROM glosary where idproject=$1 order by id';
     const response = await pool.query(query, [id]);
     
     res
