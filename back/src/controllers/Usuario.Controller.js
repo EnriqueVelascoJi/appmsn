@@ -1168,7 +1168,7 @@ exports.create_glosary = async(req, res) => {
         const responseNotification = await pool.query(queryNotification, [
             userId,
             17,
-            idGlosary,
+            idProject,
             'glosary'
 
 
@@ -1187,7 +1187,6 @@ exports.create_glosary = async(req, res) => {
         console.log(err)
     }
 }
-
 exports.get_glosary_terms = async(req, res) => {
 
     const id = req.params.id;
