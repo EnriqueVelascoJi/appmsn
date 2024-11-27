@@ -1092,7 +1092,8 @@ exports.create_glosary = async(req, res) => {
     documentationResponsible,
     updateResponsible,
     comment,
-    idProject
+    idProject,
+    userId
     } = req.body
    
     try{
@@ -1146,4 +1147,3 @@ exports.create_glosary = async(req, res) => {
         console.log(err)
     }
 }
-
