@@ -838,7 +838,7 @@ exports.create_project = async(req, res) => {
         let data = ''
         for(let i = 0; i < participants.length; i++) {
             const participant = participants[i]
-            data += `('${participant.name}','${participant.surname}','${participant.email}','${participant.position}',${participant.area},${participant.rol},${idProject}),`
+            data += `('${participant.name}','${participant.surname}','${participant.email}','${participant.position}','${participant.area}',${participant.rol},${idProject}),`
         }
         
         const queryParticipant = `INSERT INTO participant(name,surname,email,position,area,rol,idproject) values${data}`;
