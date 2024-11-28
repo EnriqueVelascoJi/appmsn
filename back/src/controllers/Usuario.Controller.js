@@ -1224,4 +1224,18 @@ exports.get_complete = async(req, res) => {
     })
     .end()
 }
+exports.get_glosary = async(req, res) => {
+
+    const query = 'SELECT * FROM glosary order by id';
+    const response = await pool.query(query);
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: response.rows
+    })
+    .end()
+}
 
