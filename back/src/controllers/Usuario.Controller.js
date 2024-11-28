@@ -1245,7 +1245,7 @@ exports.get_complete = async(req, res) => {
     const query = 'select isaccepted from glosary where idproject=$1';
     const response = await pool.query(query, [id]);
     const glosary = response.rows[0].isaccepted
-    complete['glosary'] = true
+    if(glosary) complete['glosary'] = true
     
     res
     .status(201)
@@ -1256,7 +1256,7 @@ exports.get_complete = async(req, res) => {
     })
     .end()
 }
-exports.get_glosary = async(req, res) => {
+    exports.get_glosary = async(req, res) => {
 
     const query = 'SELECT * FROM glosary order by id';
     const response = await pool.query(query);
