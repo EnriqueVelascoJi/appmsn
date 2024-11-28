@@ -1047,7 +1047,7 @@ exports.update_status_project = async(req, res) => {
             .end()
         } 
         if(flag === 'glosaryRejected') {
-            const queryProject = 'UPDATE glosary SET isaccepted=$1, idstatus=$2, rejected=$3 WHERE id=$4;';
+            const queryProject = 'UPDATE glosary SET isaccepted=$1, idstatus=$2, rejected=$3 WHERE idproject=$4;';
             const response = await pool.query(queryProject, [
                 false,
                 5,
