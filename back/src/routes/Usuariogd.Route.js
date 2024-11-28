@@ -1,7 +1,7 @@
 
 const { Router } = require('express');
 
-const { get_all_usuarios_gd, create_usuario_gd, update_usuario_gd, login_gd, get_usuario_gd, create_project_gd, get_projects_gd, get_partial_projects_gd, get_all_notifications_gd, get_notifications_by_user_gd, get_process_gd, create_requirement_gd, update_project_gd, create_dict_procedure, update_dict_procedure, create_project,get_projects, get_project, update_status_project,update_project, create_glosary, get_glosary_terms } = require('../controllers/Usuario.Controller');
+const { get_all_usuarios_gd, create_usuario_gd, update_usuario_gd, login_gd, get_usuario_gd, create_project_gd, get_projects_gd, get_partial_projects_gd, get_all_notifications_gd, get_notifications_by_user_gd, get_process_gd, create_requirement_gd, update_project_gd, create_dict_procedure, update_dict_procedure, create_project,get_projects, get_project, update_status_project,update_project, create_glosary, get_glosary_terms, get_complete } = require('../controllers/Usuario.Controller');
 const router = Router();
 
 
@@ -25,6 +25,7 @@ router.route('/dict').post(create_dict_procedure);
 router.route('/dict').patch(update_dict_procedure);
 router.route('/glosary').post(create_glosary);
 router.route('/glosary/:id').get(get_glosary_terms);
+router.route('/complete/:id').get(get_complete);
 
 
 
