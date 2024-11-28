@@ -1203,4 +1203,25 @@ exports.get_glosary_terms = async(req, res) => {
     })
     .end()
 }
+exports.get_complete = async(req, res) => {
+
+    const id = req.params.id;
+    const complete = {
+        glosary: false
+    }
+
+    const query = 'select isaccepted from glosary where idproject=$1';
+    const response = await pool.query(query, [id]);
+    const glosary = response.rows[0].isaccepted
+    complete['glosary'] = true
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: complete
+    })
+    .end()
+}
 
