@@ -1046,6 +1046,38 @@ exports.update_status_project = async(req, res) => {
             })
             .end()
         } 
+        if(flag === 'glosaryRejected') {
+            const queryProject = 'UPDATE glosary SET isaccepted=$1, idstatus=$2, rejected=$3 WHERE id=$4;';
+            const response = await pool.query(queryProject, [
+                false,
+                5,
+                rejected,
+                idProject
+            ]);
+
+            const queryUpdateNotification = 'UPDATE notificationgd SET isactive=$1, isanswered=$2 WHERE id=$3 ';
+            const responseUpdateNotification = await pool.query(queryUpdateNotification, [
+                false,
+                true,
+                idNotification
+            ]);
+
+            const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+            const responseNotification = await pool.query(queryNotification, [
+                idUserSend,
+                idUserReceiver,
+                idProject,
+                'glosaryRejected'
+            ]);
+            res
+            .status(201)
+            .json({
+            status: "success",
+            msg: "Recording sucessfully",
+            data: req.body
+            })
+            .end()
+        }
     }catch(err){
         console.log(err)
     }
