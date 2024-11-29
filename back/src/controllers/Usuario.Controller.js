@@ -1274,7 +1274,7 @@ exports.update_glosary= async(req, res) => {
             data += `('${term.term}','${term.definition}','${term.abbreviattions}','${term.synonym}','${term.example}','${term.region}','${term.area}','${term.domain}','${term.subdomain}','${term.owner}','${term.status}','${term.creationDate}','${term.updateDate}','${term.documentationResponsible}','${term.updateResponsible}','${term.comment}',${idProject},${status}),`
         }
         
-        const queryGlosary = `INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) values${data}`;
+        const queryGlosary = `INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values${data}`;
         const parseQueryGlosary = queryGlosary.substring(0, queryGlosary.length - 1);
         const responseGlosary = await pool.query(parseQueryGlosary);
 
