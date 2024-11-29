@@ -1147,55 +1147,23 @@ exports.update_project = async(req, res) => {
 
 exports.create_glosary = async(req, res) => {
 
-    const {
-    term,
-    definition,
-    abbreviattions,
-    synonym,
-    example,
-    region,
-    area,
-    domain,
-    subdomain,
-    owner,
-    status,
-    creationDate,
-    updateDate,
-    documentationResponsible,
-    updateResponsible,
-    comment,
-    idProject,
-    userId
-    } = req.body
-   
-    try{
-        const queryProject = 'INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING id;';
+    const {glosary, userId, idProject} = req.body
+    
 
-        // Create
-        const responseProject = await pool.query(queryProject, [
-            term,
-            definition,
-            abbreviattions,
-            synonym,
-            example,
-            region,
-            area,
-            domain,
-            subdomain,
-            owner,
-            status,
-            creationDate,
-            updateDate,
-            documentationResponsible,
-            updateResponsible,
-            comment,
-            idProject,
-            3
-        ]);
+    try{
+
+        let data = ''
+        for(let i = 0; i < glosary.length; i++) {
+            const term = glosary[i]
+            data += `('${term.term}','${term.definition}','${term.abbreviattions}','${term.synonym}','${term.example}','${term.region}','${term.area}','${term.domain}','${term.subdomain}','${term.owner}','${term.status}','${term.creationDate}','${term.updateDate}','${term.documentationResponsible}','${term.updateResponsible}','${term.comment}',${idProject}),`
+        }
+        
+        const queryGlosary = `INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) values${data}`;
+        const parseQueryGlosary = queryGlosary.substring(0, queryGlosary.length - 1);
+        const responseGlosary = await pool.query(parseQueryGlosary);
 
 
         //Notificaction
-        const idGlosary = responseProject.rows[0].id;
         const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
         const responseNotification = await pool.query(queryNotification, [
             userId,
@@ -1218,6 +1186,20 @@ exports.create_glosary = async(req, res) => {
     }catch(err){
         console.log(err)
     }
+
+     //Participants
+    
+
+     res
+     .status(201)
+     .json({
+     status: "success",
+     msg: "Recording sucessfully",
+     data: req.body
+     })
+     .end()
+   
+    
 }
 exports.get_glosary_terms = async(req, res) => {
 
@@ -1269,5 +1251,51 @@ exports.get_complete = async(req, res) => {
       data: response.rows
     })
     .end()
+}
+exports.update_glosary= async(req, res) => {
+
+    const idProject = req.params.id;
+    const {glosary, userId} = req.body
+    
+    try{
+
+        //Delete
+        const queryDelete = 'DELETE FROM glosary where idproject=$1'
+        // Create
+        const responseDelete = await pool.query(queryDelete, [
+            idProject
+        ]);
+        //Update
+        let data = ''
+        for(let i = 0; i < glosary.length; i++) {
+            const term = glosary[i]
+            data += `('${term.term}','${term.definition}','${term.abbreviattions}','${term.synonym}','${term.example}','${term.region}','${term.area}','${term.domain}','${term.subdomain}','${term.owner}','${term.status}','${term.creationDate}','${term.updateDate}','${term.documentationResponsible}','${term.updateResponsible}','${term.comment}',${idProject}),`
+        }
+        
+        const queryGlosary = `INSERT INTO glosary(term,definition,abbreviattions,synonym,example,region,area,domain,subdomain,owner,status,creationdate,updatedate,documentationresponsible,updateresponsible,comment,idproject,idstatus) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) values${data}`;
+        const parseQueryGlosary = queryGlosary.substring(0, queryGlosary.length - 1);
+        const responseGlosary = await pool.query(parseQueryGlosary);
+
+        //Notificaction
+        const queryNotification = 'INSERT INTO notificationgd(idusersend,iduserreceiver,idassociate,nameassociate) values($1,$2,$3,$4);';
+        const responseNotification = await pool.query(queryNotification, [
+            userId,
+            17,
+            idProject,
+            'glosaryUpdated'
+
+
+        ]);
+        res
+        .status(201)
+        .json({
+        status: "success",
+        msg: "Recording sucessfully",
+        data: req.body
+        })
+        .end()
+    }catch(err){
+        console.log(err)
+    }
 }
 
