@@ -1307,7 +1307,7 @@ exports.get_status = async(req, res) => {
         glosary: {}
     }
 
-    const query = 'select idstatus, statusname from glosary gl inner join statusgd st on gl.idstatus = st.id where gl.idproject=34';
+    const query = 'select idstatus, statusname from glosary gl inner join statusgd st on gl.idstatus = st.id where gl.idproject=$1';
     const response = await pool.query(query, [id]);
     const glosary = response.rows[0]
     complete['glosary'] = glosary
