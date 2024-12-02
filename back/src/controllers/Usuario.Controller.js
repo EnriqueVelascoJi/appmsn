@@ -1300,3 +1300,24 @@ exports.update_glosary= async(req, res) => {
         console.log(err)
     }
 }
+exports.get_status = async(req, res) => {
+
+    const id = req.params.id;
+    const complete = {
+        glosary: {}
+    }
+
+    const query = 'select idstatus, statusname from glosary gl inner join statusgd st on gl.idstatus = st.id where gl.idproject=34';
+    const response = await pool.query(query, [id]);
+    const glosary = response.rows[0]
+    complete['glosary'] = glosary
+    
+    res
+    .status(201)
+    .json({
+      status: "success",
+      msg: "Recording sucessfully",
+      data: complete
+    })
+    .end()
+}
